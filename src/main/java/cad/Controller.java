@@ -1,4 +1,4 @@
-package sample;
+package main.java.cad;
 
 public class Controller {
 }
