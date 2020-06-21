@@ -19,3 +19,5 @@ Platform: GitHub
 ## 6-22 讨论计划
  1. 人员分配
  2. 接口定义(文件导入导出 <-> 图形绘制 <-> 界面)
+
+this is a ***demo***, you can use it to draw lines.
