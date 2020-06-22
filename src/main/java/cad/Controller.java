@@ -25,7 +25,7 @@ public class Controller {
     public void onButtonClicked(MouseEvent event) {
         Button button = (Button) event.getSource();
 
-        if(button.getId().equals("line")) {
+        if (button.getId().equals("line")) {
             System.out.println("clicked");
             Status.isLineMode = true;
         }
@@ -33,12 +33,11 @@ public class Controller {
 
     @FXML
     public void onPanePressed(MouseEvent event) {
-        if(Status.isLineMode ){
-            if(Status.startX == - 1.0 && Status.startY == -1.0) {
+        if (Status.isLineMode) {
+            if (Status.startX == -1.0 && Status.startY == -1.0) {
                 Status.startX = event.getX();
                 Status.startY = event.getY();
-            }
-            else {
+            } else {
                 Line line = new Line(Status.startX, Status.startY, event.getX(), event.getY());
                 Status.startX = -1.0;
                 Status.startY = -1.0;
@@ -46,12 +45,5 @@ public class Controller {
             }
             event.consume();
         }
-
-
-
     }
-
-
-
-
 }
