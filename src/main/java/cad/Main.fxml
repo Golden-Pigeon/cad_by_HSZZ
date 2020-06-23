@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
 <?import java.lang.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane fx:id="mainPane" onMousePressed="#onPanePressed" prefHeight="692.0" prefWidth="1051.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.cad.Controller">
    <children>
@@ -81,9 +81,16 @@
       </MenuBar>
       <ToolBar id="tools" layoutX="14.0" layoutY="32.0" prefHeight="49.0" prefWidth="117.0">
         <items>
-          <Button fx:id="mouse" mnemonicParsing="false" onMouseClicked="#onButtonClicked" prefHeight="30.0" prefWidth="30.0" text="Button" />
+          <Button fx:id="mouse" mnemonicParsing="false" onMouseClicked="#onButtonClicked" prefHeight="36.0" prefWidth="26.0" />
             <Button fx:id="pencil" mnemonicParsing="false" onMouseClicked="#onButtonClicked" prefHeight="30.0" prefWidth="29.0" text="Button" />
-            <Button fx:id="line" mnemonicParsing="false" onMouseClicked="#onButtonClicked" prefHeight="30.0" prefWidth="26.0" text="Button" />
+            <Button fx:id="line" mnemonicParsing="false" onMouseClicked="#onButtonClicked" prefHeight="30.0" prefWidth="26.0">
+               <graphic>
+                  <ImageView fitHeight="46.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../images/buttons/line_trans.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
         </items>
       </ToolBar>
    </children>
