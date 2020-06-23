@@ -9,12 +9,10 @@ import java.util.List;
  * @author 侯文轩
  * @version 1.0
  */
-public class Record {
+public interface Record {
 
-    //TODO 写注释
-
-    private List<CadShape> actionList = new LinkedList<>();// 当前已保存的操作
-    private List<CadShape> deleteList = new LinkedList<>();// 当前已撤销/删除的操作
+    List<CadShape> actionList = new LinkedList<>();// 当前已保存的操作
+    List<CadShape> deleteList = new LinkedList<>();// 当前已撤销/删除的操作
 
     /**
      * 保存操作
@@ -22,14 +20,19 @@ public class Record {
      * @param inShape 当前已完成的图形
      * @return true, 如果保存成功; false, 参数为null
      */
-    public boolean saveAction(CadShape inShape) {
+    public static boolean saveAction(CadShape inShape) {
         if (inShape == null)
             return false;
         actionList.add(inShape);
         return true;
     }
 
-    public boolean undoAction() {
+    /**
+     * 撤销操作
+     *
+     * @return 成功/失败
+     */
+    public static boolean undoAction() {
         if (actionList.size() == 0)
             return false;
         CadShape deletedShape = actionList.get(actionList.size() - 1);
@@ -38,7 +41,14 @@ public class Record {
         return true;
     }
 
-    public boolean recoverDeletedShape(int deletedShapeID) {
+    /**
+     * 恢复被删除的图形
+     *
+     * @param deletedShapeID 被删除的图形的ID
+     * @return true - 恢复成功
+     * false - ID不存在
+     */
+    public default boolean recoverDeletedShape(int deletedShapeID) {
         for (CadShape currShape : deleteList) {
             if (currShape.id == deletedShapeID) {
                 deleteList.remove(currShape);
@@ -53,5 +63,10 @@ public class Record {
             }
         }
         return false;
+    }
+
+    public static void clearAll() {
+        actionList.clear();
+        deleteList.clear();
     }
 }

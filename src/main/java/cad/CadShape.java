@@ -37,7 +37,7 @@ public class CadShape {
         return newShape;
     }
 
-    public CadShape getCadShape(ShapeType type, String textContent, Color lineColor) {
+    public static CadShape getCadShape(ShapeType type, String textContent, Color lineColor) {
         CadShape newShape = new CadShape();
         if (type != ShapeType.CadText)
             return null;
@@ -47,7 +47,7 @@ public class CadShape {
         return newShape;
     }
 
-    public CadShape getCadShape(ShapeType type, List<CadPoint> curvePoints, Color lineColor) {
+    public static CadShape getCadShape(ShapeType type, List<CadPoint> curvePoints, Color lineColor) {
         CadShape newShape = new CadShape();
         if (type != ShapeType.CadCurve)
             return null;

@@ -1,12 +1,12 @@
 package main.java.cad;
 
-import java.util.ArrayList;
-import java.util.List;
+import javafx.scene.paint.Color;
 
-class FileImportExport extends Record {
+class FileImportExport implements Record {
 
     //TODO 导出到文件, 可以包含简单的加密, 比如异或加密
     public boolean exportToFile() {
+        Record.actionList.add(1, CadShape.getCadShape(ShapeType.CadText, "666", Color.BLACK));
         return false;
     }
 
