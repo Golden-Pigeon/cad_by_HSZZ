@@ -30,7 +30,7 @@ public class MainCadStage extends Stage {
         setTitle("JavaFX CAD Utility");
         setResizable(true);
         //TODO 修改logo URI
-        //getIcons().add(new Image(CommonPath.LOGO));
+        getIcons().add(new Image(CommonPath.LOGO));
         initMainCadStageContent();
         mainStageRoot.getChildren().add(mainStageContent);
         show();

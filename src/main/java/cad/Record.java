@@ -9,10 +9,10 @@ import java.util.List;
  * @author 侯文轩
  * @version 1.0
  */
-public interface Record {
+public class Record {
 
-    List<CadShape> actionList = new LinkedList<>();// 当前已保存的操作
-    List<CadShape> deleteList = new LinkedList<>();// 当前已撤销/删除的操作
+    static List<CadShape> actionList = new LinkedList<>();// 当前已保存的操作
+    static List<CadShape> deleteList = new LinkedList<>();// 当前已撤销/删除的操作
 
     /**
      * 保存操作
@@ -48,7 +48,7 @@ public interface Record {
      * @return true - 恢复成功
      * false - ID不存在
      */
-    public default boolean recoverDeletedShape(int deletedShapeID) {
+    public static boolean recoverDeletedShape(int deletedShapeID) {
         for (CadShape currShape : deleteList) {
             if (currShape.id == deletedShapeID) {
                 deleteList.remove(currShape);

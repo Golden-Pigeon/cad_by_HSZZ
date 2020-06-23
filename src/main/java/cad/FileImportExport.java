@@ -2,7 +2,7 @@ package main.java.cad;
 
 import javafx.scene.paint.Color;
 
-class FileImportExport implements Record {
+class FileImportExport extends Record {
 
     //TODO 导出到文件, 可以包含简单的加密, 比如异或加密
     public boolean exportToFile() {

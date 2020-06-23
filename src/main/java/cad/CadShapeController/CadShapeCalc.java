@@ -1,4 +1,4 @@
-package CadShapeController;
+package main.java.cad.CadShapeController;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;

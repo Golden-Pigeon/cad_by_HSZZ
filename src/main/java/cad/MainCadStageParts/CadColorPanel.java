@@ -3,14 +3,13 @@ package main.java.cad.MainCadStageParts;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Shape;
+import main.java.cad.CadCurrentStat;
 import main.java.cad.CommonDefinitions.CommonSize;
 
 import java.util.ArrayList;

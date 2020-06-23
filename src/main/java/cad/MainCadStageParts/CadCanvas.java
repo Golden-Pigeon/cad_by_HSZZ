@@ -1,6 +1,7 @@
 package main.java.cad.MainCadStageParts;
 
-import CadShapeController.CadShapeCalc;
+import main.java.cad.CadCurrentStat;
+import main.java.cad.CadShapeController.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -54,10 +55,10 @@ public class CadCanvas {
     private void handleCanvasDrawingProcess() {
         currCanvas.setOnMouseMoved(event -> {
             CadStatusBar.setStatusText("Selected: " + CadCurrentStat.type + " @ "
-                    + String.format("%.1f, %.1fpx ", event.getX(), event.getY()));
+                    + String.format("%.1f, %.1f px ", event.getX(), event.getY()));
         });
         currCanvas.setOnMouseExited(event -> {
-            CadStatusBar.setStatusText("");
+            CadStatusBar.setStatusText("Selected: " + CadCurrentStat.type + " @ N/A");
         });
 
         //TODO 记得绘制完了使用Record.saveAction()添加到Record的actionList里面
