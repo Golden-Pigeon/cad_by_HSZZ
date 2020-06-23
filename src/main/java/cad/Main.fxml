@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.control.*?>
@@ -7,7 +8,7 @@
 
 <AnchorPane fx:id="mainPane" onMousePressed="#onPanePressed" prefHeight="692.0" prefWidth="1051.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.cad.Controller">
    <children>
-      <MenuBar>
+      <MenuBar prefHeight="32.0" prefWidth="1051.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
@@ -44,8 +45,8 @@
           </Menu>
             <Menu mnemonicParsing="false" text="Tools">
               <items>
-                <MenuItem mnemonicParsing="false" text="Graphic Tools" />
-                  <MenuItem mnemonicParsing="false" text="Attribute Tools" />
+                  <CheckMenuItem fx:id="painterToolBarMenuItem" mnemonicParsing="false" onAction="#onPainterToolMenuItemAction" selected="true" text="Painter Tool" />
+                  <CheckMenuItem fx:id="colorToolBarMenuItem" mnemonicParsing="false" onAction="#onColorToolMenuItemAction" selected="true" text="Color Tool" />
               </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Window">
@@ -79,7 +80,7 @@
           </Menu>
         </menus>
       </MenuBar>
-      <ToolBar id="tools" layoutX="14.0" layoutY="32.0" prefHeight="49.0" prefWidth="117.0">
+      <ToolBar id="tools" layoutX="14.0" layoutY="32.0" prefHeight="58.0" prefWidth="117.0">
         <items>
           <Button fx:id="mouse" mnemonicParsing="false" onMouseClicked="#onButtonClicked" prefHeight="36.0" prefWidth="26.0" />
             <Button fx:id="pencil" mnemonicParsing="false" onMouseClicked="#onButtonClicked" prefHeight="30.0" prefWidth="29.0" text="Button" />
@@ -87,11 +88,51 @@
                <graphic>
                   <ImageView fitHeight="46.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../../../images/buttons/line_trans.png" />
+                        <Image url="@resources/images/buttons/line_trans.png" />
                      </image>
                   </ImageView>
                </graphic></Button>
         </items>
       </ToolBar>
+      <VBox fx:id="painterToolBar" layoutY="181.0" prefHeight="150.0" prefWidth="78.0" style="-fx-background-color: #aaaaaa; -fx-background-radius: 5;">
+         <children>
+            <TilePane hgap="5.0" prefColumns="2" prefHeight="145.0" prefRows="4" prefWidth="37.0" vgap="5.0">
+               <children>
+                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="4.0" text="Button" />
+                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="20.0" text="Button" />
+                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="0.0" text="Button" />
+                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="17.0" text="Button" />
+                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="16.0" text="Button" />
+                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="0.0" text="Button" />
+                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="24.0" text="Button" />
+                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="0.0" text="Button" />
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </TilePane>
+            <Label prefHeight="20.0" prefWidth="75.0" text="   Painter" textAlignment="CENTER" />
+         </children>
+      </VBox>
+      <VBox fx:id="colorToolBar" layoutX="973.0" layoutY="181.0" prefHeight="150.0" prefWidth="78.0" style="-fx-background-color: #aaaaaa; -fx-background-radius: 5;">
+         <children>
+            <TilePane hgap="5.0" prefColumns="2" prefHeight="145.0" prefRows="4" prefWidth="37.0" vgap="5.0">
+               <children>
+                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="4.0" text="Button" />
+                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="20.0" text="Button" />
+                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="0.0" text="Button" />
+                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="17.0" text="Button" />
+                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="16.0" text="Button" />
+                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="0.0" text="Button" />
+                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="24.0" text="Button" />
+                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="0.0" text="Button" />
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </TilePane>
+            <Label prefHeight="20.0" prefWidth="75.0" text="     Color" textAlignment="CENTER" />
+         </children>
+      </VBox>
    </children>
 </AnchorPane>
