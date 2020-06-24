@@ -2,6 +2,7 @@ package main.java.cad;
 
 import javafx.scene.paint.Color;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -20,14 +21,14 @@ class FileImportExport {
 
 
     //TODO 导出到文件, 可以包含简单的加密, 比如异或加密
-    public static boolean exportToFile(Record record) {
+    public static boolean exportToFile(Record record, File file) {
         List<CadShape> actionList = record.getActionList();
         actionList.add(1, CadShape.getCadShape(ShapeType.CadText, "666", Color.BLACK));
         return false;
     }
 
     //TODO 从文件导入
-    public static Record importFromFile() {
+    public static Record importFromFile(File file) {
         return null;
     }
 }
