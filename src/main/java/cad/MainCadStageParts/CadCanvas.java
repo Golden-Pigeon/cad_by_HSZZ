@@ -1,6 +1,6 @@
 package main.java.cad.MainCadStageParts;
 
-import main.java.cad.CadCurrentStat;
+import main.java.cad.*;
 import main.java.cad.CadShapeController.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -10,7 +10,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import main.java.cad.CommonDefinitions.CommonSize;
-import main.java.cad.Record;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +24,7 @@ public class CadCanvas {
     public static int currCanvasHeight;
     private List<Canvas> savedCanvas, deletedCanvas;
     private CadShapeCalc shapeCalc = new CadShapeCalc();
+    private CadPoint startPoint, endPoint;
 
     public CadCanvas() {
         groupContent = new Group();
@@ -67,6 +67,27 @@ public class CadCanvas {
          *
          */
         currCanvas.setOnMousePressed(event -> {
+            Canvas can = new Canvas(currCanvasWidth, currCanvasHeight);
+
+            gc = can.getGraphicsContext2D();
+
+            can.setOnMousePressed(currCanvas.getOnMousePressed());
+            can.setOnMouseDragged(currCanvas.getOnMouseDragged());
+            can.setOnMouseReleased(currCanvas.getOnMouseReleased());
+            can.setOnMouseMoved(currCanvas.getOnMouseMoved());
+            can.setOnMouseExited(currCanvas.getOnMouseExited());
+
+            if(CadCurrentStat.type.equals(ToolType.CadRectangle)) {
+                if(!CadCurrentStat.isFill) {
+                    gc.setLineWidth(CadCurrentStat.lineWidth);
+                    shapeCalc.setShapeFill(can, CadCurrentStat.color, false);
+                }
+                else
+                    shapeCalc.setShapeFill(can, CadCurrentStat.color, true);
+            }
+            startPoint = new CadPoint(event.getX(), event.getY());
+            savedCanvas.add(can);
+            groupContent.getChildren().add(can);
         });
 
         /**
@@ -80,7 +101,16 @@ public class CadCanvas {
         /**
          * 在这里完成绘制
          */
-        currCanvas.setOnMouseReleased(event -> {});
+        currCanvas.setOnMouseReleased(event -> {
+            endPoint = new CadPoint(event.getX(), event.getY());
+            if(CadCurrentStat.type.equals(ToolType.CadRectangle)) {
+                shapeCalc.drawCadRectangle(startPoint, endPoint);
+                CadShape currShape = CadShape.getCadShape(ShapeType.CadRectangle, startPoint, endPoint,
+                        CadCurrentStat.color, Color.TRANSPARENT);
+                Record.saveAction(currShape);
+            }
+            gc.getStroke();
+        });
     }
 
     /**

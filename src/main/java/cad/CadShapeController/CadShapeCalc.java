@@ -9,8 +9,15 @@ import java.util.List;
 
 public class CadShapeCalc {
     private GraphicsContext graphicsContext;
+    private boolean isFill;
 
     public void setShapeFill(Canvas canvas, Color color, boolean isFill) {
+        graphicsContext =canvas.getGraphicsContext2D();
+        this.isFill = isFill;
+        if(this.isFill)
+            graphicsContext.setFill(color);
+        else
+            graphicsContext.setStroke(color);
     }
 
     public void drawCadLine(CadPoint start, CadPoint end) {

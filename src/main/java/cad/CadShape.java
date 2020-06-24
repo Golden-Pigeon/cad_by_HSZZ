@@ -15,11 +15,11 @@ public class CadShape {
     ShapeType type;
     CadPoint startPoint = new CadPoint(0, 0);//起始点(左上角)
     CadPoint endPoint = new CadPoint(0, 0);//终点(右下角)
-    Color lineColor = Color.BLACK;// 边线颜色
+    Color lineColor = Color.BLACK;// 边线颜色, 文本颜色
     Color fillColor = Color.TRANSPARENT;// 填充颜色, 默认透明
     List<CadPoint> curvePoints; //自定义曲线的采样点
     String textContent; //文本"图形的内容"
-    String lineWidth = "8"; // 默认线宽
+    String lineWidth = "8"; // 线宽, 文本字号大小
 
     static int idCnt = 0;//总id计数器
     public final int id = idCnt++; // 当前图形的ID

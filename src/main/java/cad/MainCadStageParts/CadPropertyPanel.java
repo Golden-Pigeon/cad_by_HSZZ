@@ -88,7 +88,7 @@ public class CadPropertyPanel {
         lineSize.getSelectionModel().select(0);
         CadCurrentStat.lineWidth = 1;
         content.getChildren().add(lineSize);
-        content.getChildren().add(emptyComboBox);
+        //content.getChildren().add(emptyComboBox);
     }
 
     public void setFont() {
@@ -106,7 +106,7 @@ public class CadPropertyPanel {
         rubberSize.getSelectionModel().select(0);
         CadCurrentStat.rubberWidth = 3;
         content.getChildren().add(rubberSize);
-        content.getChildren().add(emptyComboBox);
+        //content.getChildren().add(emptyComboBox);
     }
 
     public void clear() {

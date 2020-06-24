@@ -14,7 +14,8 @@ import main.java.cad.MainCadStageParts.CadToolBar;
 
 public class MainCadStage extends Stage {
     private Group mainStageRoot;
-    private BorderPane mainStageContent;
+    public BorderPane mainStageContent;
+    private CadToolBar toolBar;
 
     public CadCanvas getCanvas() {
         return canvas;
@@ -29,7 +30,6 @@ public class MainCadStage extends Stage {
         setScene(new Scene(mainStageRoot, Color.web("#808080")));
         setTitle("JavaFX CAD Utility");
         setResizable(true);
-        //TODO 修改logo URI
         getIcons().add(new Image(CommonPath.LOGO));
         initMainCadStageContent();
         mainStageRoot.getChildren().add(mainStageContent);
@@ -41,7 +41,7 @@ public class MainCadStage extends Stage {
         menuBar.getMenuBar().prefWidthProperty().bind(this.widthProperty());
         mainStageContent.setTop(menuBar.getMenuBar());
 
-        CadToolBar toolBar = new CadToolBar();
+        toolBar = new CadToolBar();
         mainStageContent.setLeft(toolBar.getCadToolBar());
 
         canvas = new CadCanvas();
@@ -49,5 +49,14 @@ public class MainCadStage extends Stage {
 
         CadStatusBar statusBar = new CadStatusBar();
         mainStageContent.setBottom(statusBar.getCadStatusBar());
+    }
+
+    public void hideToolBar() {
+        mainStageContent.setLeft(null);
+        mainStageContent.autosize();
+    }
+
+    public void restoreToolBar() {
+        mainStageContent.setLeft(toolBar.getCadToolBar());
     }
 }
