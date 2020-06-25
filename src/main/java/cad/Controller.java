@@ -5,27 +5,31 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.print.PageOrientation;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import jdk.net.SocketFlow;
 import main.java.cad.CommonDefinitions.CommonPath;
 import main.java.cad.MainCadStageParts.CadStatusBar;
 
+import java.awt.*;
 import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.*;
+import java.util.List;
 
 
 public class Controller implements Initializable {
@@ -82,12 +86,11 @@ public class Controller implements Initializable {
     }
 
     @FXML
-    public void onPainterToolMenuItemAction(ActionEvent event){
-        if(painterToolBar.isVisible()) {
+    public void onPainterToolMenuItemAction(ActionEvent event) {
+        if (painterToolBar.isVisible()) {
             painterToolBar.setVisible(false);
             painterToolBarMenuItem.setSelected(false);
-        }
-        else {
+        } else {
             painterToolBar.setVisible(true);
             painterToolBarMenuItem.setSelected(true);
         }
@@ -95,11 +98,10 @@ public class Controller implements Initializable {
 
     @FXML
     public void onColorToolMenuItemAction(ActionEvent actionEvent) {
-        if(colorToolBar.isVisible()) {
+        if (colorToolBar.isVisible()) {
             colorToolBar.setVisible(false);
             colorToolBarMenuItem.setSelected(false);
-        }
-        else {
+        } else {
             colorToolBar.setVisible(true);
             colorToolBarMenuItem.setSelected(true);
         }
@@ -178,7 +180,7 @@ public class Controller implements Initializable {
     }
 
     public void onSaveMenuItemAction(ActionEvent actionEvent) {
-        if(!FileImportExport.exportToFile(record, new File(parentDir, child))){
+        if (!FileImportExport.exportToFile(record, new File(parentDir, child))) {
             System.err.println("save failed");
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("警告");
@@ -190,10 +192,10 @@ public class Controller implements Initializable {
 
     public void onSaveAsMenuItemAction(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("选择保存到的文件");
-        Stage mainStage = (Stage)borderPane.getScene().getWindow();
+        fileChooser.setTitle("保存到...");
+        Stage mainStage = (Stage) borderPane.getScene().getWindow();
         File saving = fileChooser.showOpenDialog(mainStage);
-        if(!FileImportExport.exportToFile(record, saving)){
+        if (!FileImportExport.exportToFile(record, saving)) {
             System.err.println("save failed");
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("警告");
@@ -208,19 +210,19 @@ public class Controller implements Initializable {
     }
 
     public void onRestartMenuItemAction(ActionEvent actionEvent) {
-        if(!Status.saved){
+        if (!Status.saved) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("重启程序");
             alert.setHeaderText("您确定要重启吗");
             alert.setContentText("画布尚未保存，重启后将失去所有未保存内容");
             Optional<ButtonType> buttonType = alert.showAndWait();
-            if(!buttonType.get().getButtonData().equals(ButtonBar.ButtonData.OK_DONE)){
+            if (!buttonType.get().getButtonData().equals(ButtonBar.ButtonData.OK_DONE)) {
                 actionEvent.consume();
                 return;
             }
 
         }
-        Stage mainStage = (Stage)borderPane.getScene().getWindow();
+        Stage mainStage = (Stage) borderPane.getScene().getWindow();
         mainStage.close();
         Platform.runLater(() -> {
             try {
@@ -298,7 +300,9 @@ public class Controller implements Initializable {
 
     public void onSelectAllMenuItemAction(ActionEvent actionEvent) {
         Status.selectAll = true;
-        mainPane.getChildren().forEach(node -> {if(node instanceof Shape) ((Shape)node).setStroke(Color.RED); });
+        mainPane.getChildren().forEach(node -> {
+            if (node instanceof Shape) ((Shape) node).setStroke(Color.RED);
+        });
     }
 
     public void onFindMenuItemAction(ActionEvent actionEvent) {
@@ -323,16 +327,31 @@ public class Controller implements Initializable {
 
     public void onAboutMenuItemAction(ActionEvent actionEvent) {
         Alert aboutAlert = new Alert(Alert.AlertType.INFORMATION);
+        Hyperlink githubLink = new Hyperlink(CommonPath.gitHubLink);
+        githubLink.setText(CommonPath.gitHubLink);
         aboutAlert.setTitle("About JavaFX CAD Utility");
         aboutAlert.setHeaderText("JavaFX CAD Utility\nBased on Intellij IDEA, GitHub and Teamwork");
         aboutAlert.initStyle(StageStyle.UTILITY);
-        aboutAlert.setContentText("版本："
+
+        FlowPane flowPane = new FlowPane();
+        flowPane.getChildren().addAll(new Label("版本："
                 + CommonPath.version + "\n"
                 + "Developers: "
                 + "郑镜竹 宋志元 翟凡荣 侯文轩\n"
-                + "Available on GitHub: \n"
-                + CommonPath.gitHubLink + "\n"
-                + "License: Apache License 2.0");
+                + "License: Apache License 2.0\n"
+                + "Available on GitHub\n"), githubLink);
+
+        githubLink.setOnAction((event -> {
+            try {
+                Desktop.getDesktop().browse(new URL(CommonPath.gitHubLink).toURI());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }));
+
+        aboutAlert.getDialogPane().contentProperty().set(flowPane);
         aboutAlert.showAndWait();
     }
 
@@ -390,7 +409,8 @@ public class Controller implements Initializable {
                             Status.selected = shape;
                             Status.selectAll = false;
                             mainPane.getChildren().forEach(t ->{
-                                ((Shape)t).setStroke(Status.strokeColor);//TODO: recover the origin color
+                                if(t instanceof Shape)
+                                    ((Shape)t).setStroke(Status.strokeColor);//TODO: recover the origin color
                             });
                             line.setStroke(Color.RED);
                         }
