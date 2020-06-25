@@ -6,119 +6,127 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="mainPane" onMousePressed="#onPanePressed" prefHeight="692.0" prefWidth="1051.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.cad.Controller">
-   <children>
-      <MenuBar prefHeight="32.0" prefWidth="1051.0">
-        <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-              <MenuItem mnemonicParsing="false" text="New" />
-                  <MenuItem mnemonicParsing="false" text="Open" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Close" />
-                  <MenuItem mnemonicParsing="false" text="Close All" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Save" />
-                  <MenuItem mnemonicParsing="false" text="Save As" />
-                  <MenuItem mnemonicParsing="false" text="Save All" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Refresh" />
-                  <MenuItem mnemonicParsing="false" text="Restart" />
-                  <MenuItem mnemonicParsing="false" text="Exit" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Undo" />
-                  <MenuItem mnemonicParsing="false" text="Redo" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Cut" />
-                  <MenuItem mnemonicParsing="false" text="Copy" />
-                  <MenuItem mnemonicParsing="false" text="Paste" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Delete" />
-                  <MenuItem mnemonicParsing="false" text="Select All" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Find" />
-                  <MenuItem mnemonicParsing="false" text="List Record" />
-            </items>
-          </Menu>
-            <Menu mnemonicParsing="false" text="Tools">
-              <items>
-                  <CheckMenuItem fx:id="painterToolBarMenuItem" mnemonicParsing="false" onAction="#onPainterToolMenuItemAction" selected="true" text="Painter Tool" />
-                  <CheckMenuItem fx:id="colorToolBarMenuItem" mnemonicParsing="false" onAction="#onColorToolMenuItemAction" selected="true" text="Color Tool" />
-              </items>
-            </Menu>
-            <Menu mnemonicParsing="false" text="Window">
-              <items>
-                <MenuItem mnemonicParsing="false" text="New Window" />
-                  <MenuItem mnemonicParsing="false" text="Preference" />
-              </items>
-            </Menu>
-            <Menu mnemonicParsing="false" text="Server">
-              <items>
-                <MenuItem mnemonicParsing="false" text="Connect" />
-                  <MenuItem mnemonicParsing="false" text="Group" />
-                  <MenuItem mnemonicParsing="false" text="Customize Account" />
-                  <MenuItem mnemonicParsing="false" text="Upload Workspace" />
-                  <MenuItem mnemonicParsing="false" text="Download Workspace" />
-                  <MenuItem mnemonicParsing="false" text="Disconnect" />
-              </items>
-            </Menu>
-            <Menu mnemonicParsing="false" text="Coop">
-              <items>
-                <MenuItem mnemonicParsing="false" text="Chat Box" />
-                  <MenuItem mnemonicParsing="false" text="Status Box" />
-                  <MenuItem mnemonicParsing="false" text="History" />
-              </items>
-            </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-                  <MenuItem mnemonicParsing="false" text="Help" />
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
-      <VBox fx:id="painterToolBar" layoutY="181.0" prefHeight="150.0" prefWidth="78.0" style="-fx-background-color: #aaaaaa; -fx-background-radius: 5;">
-         <children>
-            <TilePane hgap="5.0" prefColumns="2" prefHeight="145.0" prefRows="4" prefWidth="37.0" vgap="5.0">
-               <children>
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="4.0" style="-fx-base: #aaaaaa;" text="Button" />
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="20.0" style="-fx-base: #aaaaaa;" text="Button" />
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="0.0" style="-fx-base: #aaaaaa;" text="Button" />
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="17.0" style="-fx-base: #aaaaaa;" text="Button" />
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="16.0" style="-fx-base: #aaaaaa;" text="Button" />
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="0.0" style="-fx-base: #aaaaaa;" text="Button" />
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="24.0" style="-fx-base: #aaaaaa;" text="Button" />
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="0.0" style="-fx-base: #aaaaaa;" text="Button" />
-               </children>
-               <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
-            </TilePane>
-            <Label prefHeight="20.0" prefWidth="75.0" text="   Painter" textAlignment="CENTER" />
-         </children>
-      </VBox>
-      <VBox fx:id="colorToolBar" layoutX="973.0" layoutY="181.0" prefHeight="150.0" prefWidth="78.0" style="-fx-background-color: #aaaaaa; -fx-background-radius: 5;">
-         <children>
-            <TilePane hgap="5.0" prefColumns="2" prefHeight="145.0" prefRows="4" prefWidth="37.0" vgap="5.0">
-               <children>
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="4.0" style="-fx-base: #aaaaaa;" text="Button" />
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="20.0" style="-fx-base: #aaaaaa;" text="Button" />
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="0.0" style="-fx-base: #aaaaaa;" text="Button" />
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="17.0" style="-fx-base: #aaaaaa;" text="Button" />
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="16.0" style="-fx-base: #aaaaaa;" text="Button" />
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="0.0" style="-fx-base: #aaaaaa;" text="Button" />
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="24.0" style="-fx-base: #aaaaaa;" text="Button" />
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="0.0" style="-fx-base: #aaaaaa;" text="Button" />
-               </children>
-               <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
-            </TilePane>
-            <Label prefHeight="20.0" prefWidth="75.0" text="     Color" textAlignment="CENTER" />
-         </children>
-      </VBox>
-   </children>
-</AnchorPane>
+<BorderPane fx:id="borderPane" prefHeight="692.0" prefWidth="1051.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.cad.Controller">
+   <center>
+   <AnchorPane fx:id="mainPane" onMouseMoved="#onMouseMovedInMainPane" onMousePressed="#onPanePressed" BorderPane.alignment="CENTER" />
+   </center>
+   <top>
+   <MenuBar prefHeight="32.0" prefWidth="1051.0" BorderPane.alignment="CENTER">
+     <menus>
+       <Menu mnemonicParsing="false" text="File">
+         <items>
+           <MenuItem mnemonicParsing="false" onAction="#onNewMenuItemAction" text="New" />
+               <MenuItem mnemonicParsing="false" onAction="#onOpenMenuItemAction" text="Open" />
+               <SeparatorMenuItem mnemonicParsing="false" />
+               <MenuItem mnemonicParsing="false" onAction="#onCloseMenuItemAction" text="Close" />
+               <MenuItem mnemonicParsing="false" text="Close All" />
+               <SeparatorMenuItem mnemonicParsing="false" />
+               <MenuItem mnemonicParsing="false" onAction="#onSaveMenuItemAction" text="Save" />
+               <MenuItem mnemonicParsing="false" onAction="#onSaveAsMenuItemAction" text="Save As" />
+               <MenuItem mnemonicParsing="false" text="Save All" />
+               <SeparatorMenuItem mnemonicParsing="false" />
+               <MenuItem mnemonicParsing="false" onAction="#onRefreshMenuItemAction" text="Refresh" />
+               <MenuItem mnemonicParsing="false" onAction="#onRestartMenuItemAction" text="Restart" />
+               <MenuItem mnemonicParsing="false" onAction="#onExitMenuItemAction" text="Exit" />
+         </items>
+       </Menu>
+       <Menu mnemonicParsing="false" text="Edit">
+         <items>
+           <MenuItem mnemonicParsing="false" onAction="#onRedoMenuItemAction" text="Undo" />
+               <MenuItem mnemonicParsing="false" onAction="#onUndoMenuItemAction" text="Redo" />
+               <SeparatorMenuItem mnemonicParsing="false" />
+               <MenuItem mnemonicParsing="false" onAction="#onCutMenuItemAction" text="Cut" />
+               <MenuItem mnemonicParsing="false" onAction="#onCopyMenuItemAction" text="Copy" />
+               <MenuItem mnemonicParsing="false" onAction="#onPasteMenuItemAction" text="Paste" />
+               <SeparatorMenuItem mnemonicParsing="false" />
+               <MenuItem mnemonicParsing="false" onAction="#onDeleteMenuItemAction" text="Delete" />
+               <MenuItem mnemonicParsing="false" onAction="#onSelectAllMenuItemAction" text="Select All" />
+               <SeparatorMenuItem mnemonicParsing="false" />
+               <MenuItem mnemonicParsing="false" onAction="#onFindMenuItemAction" text="Find" />
+               <MenuItem mnemonicParsing="false" onAction="#onListRecordMenuItemAction" text="List Record" />
+         </items>
+       </Menu>
+         <Menu mnemonicParsing="false" text="Tools">
+           <items>
+               <CheckMenuItem fx:id="painterToolBarMenuItem" mnemonicParsing="false" onAction="#onPainterToolMenuItemAction" selected="true" text="Painter Tool" />
+               <CheckMenuItem fx:id="colorToolBarMenuItem" mnemonicParsing="false" onAction="#onColorToolMenuItemAction" selected="true" text="Color Tool" />
+           </items>
+         </Menu>
+         <Menu mnemonicParsing="false" text="Window">
+           <items>
+             <MenuItem mnemonicParsing="false" onAction="#onNewWindowMenuItemAction" text="New Window" />
+               <MenuItem mnemonicParsing="false" text="Preference" />
+           </items>
+         </Menu>
+         <Menu mnemonicParsing="false" text="Server">
+           <items>
+             <MenuItem mnemonicParsing="false" text="Connect" />
+               <MenuItem mnemonicParsing="false" text="Group" />
+               <MenuItem mnemonicParsing="false" text="Customize Account" />
+               <MenuItem mnemonicParsing="false" text="Upload Workspace" />
+               <MenuItem mnemonicParsing="false" text="Download Workspace" />
+               <MenuItem mnemonicParsing="false" text="Disconnect" />
+           </items>
+         </Menu>
+         <Menu mnemonicParsing="false" text="Coop">
+           <items>
+             <MenuItem mnemonicParsing="false" text="Chat Box" />
+               <MenuItem mnemonicParsing="false" text="Status Box" />
+               <MenuItem mnemonicParsing="false" text="History" />
+           </items>
+         </Menu>
+       <Menu mnemonicParsing="false" text="Help">
+         <items>
+               <MenuItem mnemonicParsing="false" onAction="#onHelpMenuItemAction" text="Help" />
+           <MenuItem mnemonicParsing="false" onAction="#onAboutMenuItemAction" text="About" />
+         </items>
+       </Menu>
+     </menus>
+   </MenuBar>
+   </top>
+   <left>
+   <VBox fx:id="painterToolBar" alignment="CENTER" prefHeight="150.0" prefWidth="78.0" style="-fx-background-color: #aaaaaa; -fx-background-radius: 5;" BorderPane.alignment="CENTER">
+      <children>
+         <TilePane hgap="5.0" prefColumns="2" prefHeight="145.0" prefRows="4" prefWidth="37.0" vgap="5.0">
+            <children>
+               <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="4.0" style="-fx-base: #aaaaaa;" text="Button" />
+               <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="20.0" style="-fx-base: #aaaaaa;" text="Button" />
+               <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="0.0" style="-fx-base: #aaaaaa;" text="Button" />
+               <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="17.0" style="-fx-base: #aaaaaa;" text="Button" />
+               <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="16.0" style="-fx-base: #aaaaaa;" text="Button" />
+               <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="0.0" style="-fx-base: #aaaaaa;" text="Button" />
+               <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="24.0" style="-fx-base: #aaaaaa;" text="Button" />
+               <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="0.0" style="-fx-base: #aaaaaa;" text="Button" />
+            </children>
+            <padding>
+               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </padding>
+         </TilePane>
+         <Label prefHeight="20.0" prefWidth="75.0" text="   Painter" textAlignment="CENTER" />
+      </children>
+   </VBox>
+   </left>
+   <right>
+   <VBox fx:id="colorToolBar" alignment="CENTER" prefHeight="150.0" prefWidth="78.0" style="-fx-background-color: #aaaaaa; -fx-background-radius: 5;" BorderPane.alignment="CENTER">
+      <children>
+         <TilePane hgap="5.0" prefColumns="2" prefHeight="145.0" prefRows="4" prefWidth="37.0" vgap="5.0">
+            <children>
+               <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="4.0" style="-fx-base: #aaaaaa;" text="Button" />
+               <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="20.0" style="-fx-base: #aaaaaa;" text="Button" />
+               <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="0.0" style="-fx-base: #aaaaaa;" text="Button" />
+               <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="17.0" style="-fx-base: #aaaaaa;" text="Button" />
+               <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="16.0" style="-fx-base: #aaaaaa;" text="Button" />
+               <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="0.0" style="-fx-base: #aaaaaa;" text="Button" />
+               <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="24.0" style="-fx-base: #aaaaaa;" text="Button" />
+               <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="0.0" style="-fx-base: #aaaaaa;" text="Button" />
+            </children>
+            <padding>
+               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </padding>
+         </TilePane>
+         <Label prefHeight="20.0" prefWidth="75.0" text="     Color" textAlignment="CENTER" />
+      </children>
+   </VBox>
+   </right>
+
+</BorderPane>
