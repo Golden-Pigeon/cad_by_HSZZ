@@ -302,8 +302,14 @@ public class Controller implements Initializable {
 
     }
 
-    public void onNewWindowMenuItemAction(ActionEvent actionEvent) throws IOException {
-
+    public void onNewWindowMenuItemAction(ActionEvent actionEvent) {
+        Platform.runLater(() -> {
+            try {
+                new Main().start(new Stage());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public void onHelpMenuItemAction(ActionEvent actionEvent) {
@@ -311,4 +317,6 @@ public class Controller implements Initializable {
 
     public void onAboutMenuItemAction(ActionEvent actionEvent) {
     }
+
+
 }

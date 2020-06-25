@@ -33,8 +33,8 @@
        </Menu>
        <Menu mnemonicParsing="false" text="Edit">
          <items>
-           <MenuItem mnemonicParsing="false" onAction="#onRedoMenuItemAction" text="Undo" />
-               <MenuItem mnemonicParsing="false" onAction="#onUndoMenuItemAction" text="Redo" />
+           <MenuItem mnemonicParsing="false" onAction="#onUndoMenuItemAction" text="Undo" />
+               <MenuItem mnemonicParsing="false" onAction="#onRedoMenuItemAction" text="Redo" />
                <SeparatorMenuItem mnemonicParsing="false" />
                <MenuItem mnemonicParsing="false" onAction="#onCutMenuItemAction" text="Cut" />
                <MenuItem mnemonicParsing="false" onAction="#onCopyMenuItemAction" text="Copy" />
