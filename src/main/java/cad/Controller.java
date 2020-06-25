@@ -33,6 +33,13 @@ import java.util.*;
 public class Controller implements Initializable {
 
 
+//    public Button lineButton;
+//    public Button penButton;
+//    public Button eclipseButton;
+//    public Button eraseButton;
+//    public Button rectButton;
+//    public Button roundRectButton;
+//    public Button textButton;
     private File parentDir;
     private String child;
 
@@ -332,4 +339,28 @@ public class Controller implements Initializable {
     }
 
 
+    public void onToolsButtonAction(ActionEvent actionEvent) {
+        Button button = (Button)actionEvent.getSource();
+        if(button.getId().equals("lineButton")){
+            Status.paintMode = ShapeType.CadLine;
+        }
+        else if(button.getId().equals("penButton")){
+            Status.paintMode = ShapeType.CadCurve;
+        }
+        else if(button.getId().equals("ellipseButton")){
+            Status.paintMode = ShapeType.CadOval;
+        }
+        else if(button.getId().equals("eraserButton")){
+            Status.paintMode = null;//TODO: erase mode
+        }
+        else if(button.getId().equals("rectButton")){
+            Status.paintMode = ShapeType.CadRectangle;
+        }
+        else if(button.getId().equals("roundRectButton")){
+            Status.paintMode = ShapeType.CadRectangle_RoundCorner;
+        }
+        else if(button.getId().equals("textButton")){
+            Status.paintMode = ShapeType.CadText;
+        }
+    }
 }
