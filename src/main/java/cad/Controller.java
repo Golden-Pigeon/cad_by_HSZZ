@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.java.cad.CommonDefinitions.CommonPath;
 import main.java.cad.MainCadStageParts.CadStatusBar;
@@ -173,12 +174,27 @@ public class Controller implements Initializable {
     public void onSaveMenuItemAction(ActionEvent actionEvent) {
         if(!FileImportExport.exportToFile(record, new File(parentDir, child))){
             System.err.println("save failed");
-            //TODO: call a msgBox to alert
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("警告");
+            alert.setHeaderText("保存失败");
+            alert.setContentText("请检查保存路径是否合法");
+            alert.showAndWait();
         }
     }
 
     public void onSaveAsMenuItemAction(ActionEvent actionEvent) {
-        //TODO: call a msgBox to select file
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("选择保存到的文件");
+        Stage mainStage = (Stage)borderPane.getScene().getWindow();
+        File saving = fileChooser.showOpenDialog(mainStage);
+        if(!FileImportExport.exportToFile(record, saving)){
+            System.err.println("save failed");
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("警告");
+            alert.setHeaderText("保存失败");
+            alert.setContentText("请检查保存路径是否合法");
+            alert.showAndWait();
+        }
     }
 
     public void onRefreshMenuItemAction(ActionEvent actionEvent) {
@@ -186,7 +202,27 @@ public class Controller implements Initializable {
     }
 
     public void onRestartMenuItemAction(ActionEvent actionEvent) {
-        //TODO: restart
+        if(!Status.saved){
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("重启程序");
+            alert.setHeaderText("您确定要重启吗");
+            alert.setContentText("画布尚未保存，重启后将失去所有未保存内容");
+            Optional<ButtonType> buttonType = alert.showAndWait();
+            if(!buttonType.get().getButtonData().equals(ButtonBar.ButtonData.OK_DONE)){
+                actionEvent.consume();
+                return;
+            }
+
+        }
+        Stage mainStage = (Stage)borderPane.getScene().getWindow();
+        mainStage.close();
+        Platform.runLater(() -> {
+            try {
+                new Main().start(new Stage());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public void onExitMenuItemAction(ActionEvent actionEvent) {

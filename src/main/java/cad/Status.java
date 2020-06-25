@@ -6,11 +6,13 @@ import javafx.scene.text.Font;
 import java.awt.*;
 
 public class Status {
-    public static ShapeType paintMode;
-    public static Color color;
-    public static double lineWidth;
-    public static CadShape selected;
-    public static boolean selectAll;
-    public static Font font;
-    public static String text;
+    public static ShapeType paintMode = null;
+    public static Color color = Color.BLACK;
+    public static double lineWidth = 1.0;
+    public static CadShape selected = null;
+    public static boolean selectAll = false;
+    public static String fontType = "STSong";
+    public static int fontSize = 8;
+    public static String text = "";
+    public static boolean saved = false;
 }

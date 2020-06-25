@@ -23,7 +23,7 @@ class FileImportExport {
     //TODO 导出到文件, 可以包含简单的加密, 比如异或加密
     public static boolean exportToFile(Record record, File file) {
         List<CadShape> actionList = record.getActionList();
-        actionList.add(1, CadShape.getCadShape(ShapeType.CadText, "666", Color.BLACK));
+        actionList.add(0, CadShape.getCadShape(ShapeType.CadText, "666", Color.BLACK));
         return false;
     }
 
