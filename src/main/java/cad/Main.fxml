@@ -10,6 +10,7 @@
 
 <AnchorPane fx:id="mainPane" onMousePressed="#onPanePressed" prefHeight="692.0" prefWidth="1051.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.cad.Controller">
    <children>
+      <Canvas height="669.0" layoutY="32.0" width="1051.0" />
       <MenuBar prefHeight="32.0" prefWidth="1051.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
@@ -82,9 +83,9 @@
           </Menu>
         </menus>
       </MenuBar>
-      <VBox fx:id="painterToolBar" layoutY="181.0" prefHeight="150.0" prefWidth="70.0" style="-fx-background-color: #aaaaaa; -fx-background-radius: 5;">
+      <VBox fx:id="painterToolBar" alignment="CENTER" layoutY="181.0" prefHeight="408.0" prefWidth="87.0" style="-fx-background-color: #aaaaaa; -fx-background-radius: 5;">
          <children>
-            <TilePane alignment="TOP_CENTER" hgap="5.0" prefColumns="2" prefHeight="389.0" prefRows="4" prefWidth="0.0" tileAlignment="TOP_CENTER" vgap="5.0">
+            <TilePane alignment="TOP_CENTER" hgap="5.0" prefColumns="2" prefHeight="0.0" prefRows="4" prefWidth="0.0" tileAlignment="TOP_CENTER" vgap="5.0">
                <children>
                   <Button ellipsisString="" graphicTextGap="0.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="0.0" style="-fx-base: #aaaaaa;">
                      <graphic>
@@ -141,38 +142,41 @@
                            </image>
                         </ImageView>
                      </graphic></Button>
-                  
+
                </children>
                <padding>
-                  <Insets bottom="5.0" top="5.0" />
+                  <Insets bottom="8.0" top="10.0" />
                </padding>
             </TilePane>
-            <Label prefHeight="20.0" prefWidth="75.0" text="  Tools" textAlignment="CENTER">
+            <ComboBox fx:id="sizeComboBox" onAction="#onSizeComboBoxFinished" onMouseClicked="#onSizeComboBoxClicked" prefWidth="150.0" promptText="Size" />
+            <Slider fx:id="sizeSlider" blockIncrement="2.0" majorTickUnit="2.0" max="20.0" min="8.0" minorTickCount="0" onMouseReleased="#onSizeSliderFinished" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="8.0" />
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="75.0" text="Tools" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="17.0" />
-               </font></Label>
+               </font>
+            </Label>
          </children>
       </VBox>
       <VBox fx:id="colorToolBar" layoutX="949.0" layoutY="181.0" prefHeight="241.0" prefWidth="102.0" style="-fx-background-color: #aaaaaa; -fx-background-radius: 5;">
          <children>
             <TilePane alignment="CENTER" hgap="5.0" prefColumns="2" prefHeight="145.0" prefRows="4" prefWidth="37.0" vgap="5.0">
                <children>
-                  <Button fx:id="preset_black" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" style="-fx-base: #000000;" />
-                  <Button fx:id="preset_white" alignment="TOP_CENTER" contentDisplay="CENTER" graphicTextGap="0.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" style="-fx-base: #ffffff;" />
-                  <Button fx:id="preset_gray" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" style="-fx-base: #c0c0c0;" />
-                  <Button fx:id="preset_darkgray" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" style="-fx-base: #696969;" />
-                  <Button fx:id="preset_blue" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" style="-fx-base: #00BFFF;" />
-                  <Button fx:id="preset_orange" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" style="-fx-base: #ffa500;" />
-                  <Button fx:id="preset_red" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" style="-fx-base: #ff0000;" />
-                  <Button fx:id="preset_gold" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" style="-fx-base: #FFD700;" />
-                  <Button fx:id="preset_green" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: #00FF00;" />
-                  <Button fx:id="preset_yellow" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: #FFFF00;" />
+                  <Button fx:id="preset_black" mnemonicParsing="false" onAction="#onColorButtonClicked" prefHeight="30.0" prefWidth="30.0" style="-fx-base: #000000;" />
+                  <Button fx:id="preset_white" alignment="TOP_CENTER" contentDisplay="CENTER" graphicTextGap="0.0" mnemonicParsing="false" onAction="#onColorButtonClicked" prefHeight="30.0" prefWidth="30.0" style="-fx-base: #ffffff;" />
+                  <Button fx:id="preset_gray" mnemonicParsing="false" onAction="#onColorButtonClicked" prefHeight="30.0" prefWidth="30.0" style="-fx-base: #c0c0c0;" />
+                  <Button fx:id="preset_darkgray" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onColorButtonClicked" prefHeight="30.0" prefWidth="30.0" style="-fx-base: #696969;" />
+                  <Button fx:id="preset_blue" mnemonicParsing="false" onAction="#onColorButtonClicked" prefHeight="30.0" prefWidth="30.0" style="-fx-base: #00BFFF;" />
+                  <Button fx:id="preset_orange" mnemonicParsing="false" onAction="#onColorButtonClicked" prefHeight="30.0" prefWidth="30.0" style="-fx-base: #ffa500;" />
+                  <Button fx:id="preset_red" mnemonicParsing="false" onAction="#onColorButtonClicked" prefHeight="30.0" prefWidth="30.0" style="-fx-base: #ff0000;" />
+                  <Button fx:id="preset_gold" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onColorButtonClicked" prefHeight="30.0" prefWidth="30.0" style="-fx-base: #FFD700;" />
+                  <Button fx:id="preset_green" mnemonicParsing="false" onAction="#onColorButtonClicked" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: #00FF00;" />
+                  <Button fx:id="preset_yellow" mnemonicParsing="false" onAction="#onColorButtonClicked" prefHeight="30.0" prefWidth="30.0" style="-fx-background-color: #FFFF00;" />
                </children>
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
             </TilePane>
-                  <ColorPicker prefHeight="34.0" prefWidth="109.0">
+                  <ColorPicker fx:id="colorPicker" onAction="#onColorPickerFinished" prefHeight="34.0" prefWidth="109.0">
                <value>
                   <Color green="0.6344988346099854" blue="1.0" />
                </value>
@@ -186,7 +190,6 @@
             <Insets left="10.0" />
          </opaqueInsets>
       </VBox>
-      <Canvas height="669.0" layoutY="32.0" width="1051.0" />
       <Label alignment="CENTER_RIGHT" layoutX="875.0" layoutY="690.0" prefHeight="23.0" prefWidth="176.0" style="-fx-background-color: #D3D3D3;" text="[CAD Status and CurrPos]" textAlignment="RIGHT" />
    </children>
 </AnchorPane>
