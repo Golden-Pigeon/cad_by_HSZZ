@@ -55,10 +55,10 @@ public class Record {
      */
     public boolean recoverDeletedShape(int deletedShapeID) {
         for (CadShape currShape : deleteList) {
-            if (currShape.id == deletedShapeID) {
+            if (currShape.getId() == deletedShapeID) {
                 deleteList.remove(currShape);
                 for (int i = 0; i < actionList.size(); i++) {
-                    if (actionList.get(i).id > deletedShapeID) {
+                    if (actionList.get(i).getId() > deletedShapeID) {
                         actionList.add(i, currShape);
                         return true;
                     }

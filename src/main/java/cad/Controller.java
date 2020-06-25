@@ -5,9 +5,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
+import javafx.print.PageOrientation;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -20,13 +19,12 @@ import javafx.scene.shape.Shape;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import jdk.net.SocketFlow;
 import main.java.cad.CommonDefinitions.CommonPath;
 import main.java.cad.MainCadStageParts.CadStatusBar;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.util.*;
 
 
@@ -79,7 +77,7 @@ public class Controller implements Initializable {
     private Slider sizeSlider;
 
     @FXML
-    public void onPanePressed(MouseEvent event) {
+    public void onMainPaneMousePressed(MouseEvent event) {
 
     }
 
@@ -115,8 +113,8 @@ public class Controller implements Initializable {
 
     @FXML
     public void onColorPickerFinished(ActionEvent actionEvent) {
-        CadCurrentStat.color = colorPicker.getValue();
-        System.out.println(CadCurrentStat.color.toString());
+        Status.strokeColor = colorPicker.getValue();
+        System.out.println(Status.strokeColor.toString());
     }
 
     @FXML
@@ -138,8 +136,8 @@ public class Controller implements Initializable {
     public void onSizeComboBoxFinished(ActionEvent actionEvent) {
         String currComboBoxValue = sizeComboBox.getValue();
         if (currComboBoxValue != null) {
-            CadCurrentStat.textFontSize = (int) Double.parseDouble(currComboBoxValue);
-            CadCurrentStat.lineWidth = (int) Double.parseDouble(currComboBoxValue);
+            Status.fontSize = (int) Double.parseDouble(currComboBoxValue);
+            Status.lineWidth = (int) Double.parseDouble(currComboBoxValue);
             sizeSlider.setValue((int) Double.parseDouble(currComboBoxValue));
         }
     }
@@ -147,8 +145,8 @@ public class Controller implements Initializable {
     @FXML
     public void onSizeSliderFinished(MouseEvent mouseEvent) {
         sizeComboBox.setValue(String.valueOf(sizeSlider.getValue()));
-        CadCurrentStat.textFontSize = (int) sizeSlider.getValue();
-        CadCurrentStat.lineWidth = (int) sizeSlider.getValue();
+        Status.fontSize = (int) sizeSlider.getValue();
+        Status.lineWidth = (int) sizeSlider.getValue();
     }
 
     @Override
@@ -341,26 +339,64 @@ public class Controller implements Initializable {
 
     public void onToolsButtonAction(ActionEvent actionEvent) {
         Button button = (Button)actionEvent.getSource();
-        if(button.getId().equals("lineButton")){
-            Status.paintMode = ShapeType.CadLine;
+        switch (button.getId()) {
+            case "lineButton":
+                Status.paintMode = PaintMode.CadLine;
+                break;
+            case "penButton":
+                Status.paintMode = PaintMode.CadCurve;
+                break;
+            case "ellipseButton":
+                Status.paintMode = PaintMode.CadOval;
+                break;
+            case "eraserButton":
+                Status.paintMode = PaintMode.CadEraser;//TODO: erase mode
+
+                break;
+            case "rectButton":
+                Status.paintMode = PaintMode.CadRectangle;
+                break;
+            case "roundRectButton":
+                Status.paintMode = PaintMode.CadRectangle_RoundCorner;
+                break;
+            case "textButton":
+                Status.paintMode = PaintMode.CadText;
+                break;
         }
-        else if(button.getId().equals("penButton")){
-            Status.paintMode = ShapeType.CadCurve;
-        }
-        else if(button.getId().equals("ellipseButton")){
-            Status.paintMode = ShapeType.CadOval;
-        }
-        else if(button.getId().equals("eraserButton")){
-            Status.paintMode = null;//TODO: erase mode
-        }
-        else if(button.getId().equals("rectButton")){
-            Status.paintMode = ShapeType.CadRectangle;
-        }
-        else if(button.getId().equals("roundRectButton")){
-            Status.paintMode = ShapeType.CadRectangle_RoundCorner;
-        }
-        else if(button.getId().equals("textButton")){
-            Status.paintMode = ShapeType.CadText;
+    }
+
+    public void onMainPaneMouseClicked(MouseEvent mouseEvent) {
+        double x = mouseEvent.getX();
+        double y = mouseEvent.getY();
+        switch (Status.paintMode){
+            case CadText:
+                //TODO: Enter Texts
+            case CadLine:
+                if(Status.startPoint == null){
+                    Status.startPoint = new CadPoint(x, y);
+                } else {
+                    CadShape shape = CadShape.getCadShape(PaintMode.CadLine, Status.startPoint, new CadPoint(x, y), Status.strokeColor, Status.fillColor);
+                    record.getActionList().add(shape);
+                    Line line = new Line(Status.startPoint.getX(), Status.startPoint.getY(), x, y);
+                    Status.startPoint = null;
+                    line.setId(String.valueOf(shape.getId()));
+                    line.setStrokeWidth(Status.lineWidth);//TODO: update Record to support line width
+                    line.setOnMouseClicked(event -> {
+                        if(Status.paintMode == PaintMode.CadEraser){
+                            line.setVisible(false);
+                            //TODO: improve delete operations
+                        }
+                        else {
+                            Status.selected = shape;
+                            Status.selectAll = false;
+                            mainPane.getChildren().forEach(t ->{
+                                ((Shape)t).setStroke(Status.strokeColor);//TODO: recover the origin color
+                            });
+                            line.setStroke(Color.RED);
+                        }
+                    });
+                    mainPane.getChildren().add(line);
+                }
         }
     }
 }

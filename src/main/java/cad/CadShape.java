@@ -12,7 +12,7 @@ import java.util.*;
  */
 public class CadShape {
 
-    ShapeType type;
+    PaintMode type;
     CadPoint startPoint = new CadPoint(0, 0);//起始点(左上角)
     CadPoint endPoint = new CadPoint(0, 0);//终点(右下角)
     Color lineColor = Color.BLACK;// 边线颜色
@@ -21,13 +21,13 @@ public class CadShape {
     String textContent; //文本"图形的内容"
     String lineWidth = "8"; // 默认线宽
 
-    static int idCnt = 0;//总id计数器
-    public final int id = idCnt++; // 当前图形的ID
+    private static int idCnt = 0;//总id计数器
+    private final int id = idCnt++; // 当前图形的ID
 
     private CadShape() {
     }
 
-    public static CadShape getCadShape(ShapeType type, CadPoint startPoint, CadPoint endPoint, Color lineColor, Color fillColor) {
+    public static CadShape getCadShape(PaintMode type, CadPoint startPoint, CadPoint endPoint, Color lineColor, Color fillColor) {
         CadShape newShape = new CadShape();
         newShape.type = type;
         newShape.startPoint = startPoint;
@@ -37,23 +37,27 @@ public class CadShape {
         return newShape;
     }
 
-    public static CadShape getCadShape(ShapeType type, String textContent, Color lineColor) {
+    public static CadShape getCadShape(PaintMode type, String textContent, Color lineColor) {
         CadShape newShape = new CadShape();
-        if (type != ShapeType.CadText)
+        if (type != PaintMode.CadText)
             return null;
-        newShape.type = ShapeType.CadText;
+        newShape.type = PaintMode.CadText;
         newShape.textContent = textContent;
         newShape.lineColor = lineColor;
         return newShape;
     }
 
-    public static CadShape getCadShape(ShapeType type, List<CadPoint> curvePoints, Color lineColor) {
+    public static CadShape getCadShape(PaintMode type, List<CadPoint> curvePoints, Color lineColor) {
         CadShape newShape = new CadShape();
-        if (type != ShapeType.CadCurve)
+        if (type != PaintMode.CadCurve)
             return null;
-        newShape.type = ShapeType.CadCurve;
+        newShape.type = PaintMode.CadCurve;
         newShape.curvePoints = curvePoints;
         newShape.lineColor = lineColor;
         return newShape;
+    }
+
+    public int getId(){
+        return id;
     }
 }
