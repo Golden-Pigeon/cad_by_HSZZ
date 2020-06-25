@@ -19,6 +19,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Shape;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import main.java.cad.CommonDefinitions.CommonPath;
 import main.java.cad.MainCadStageParts.CadStatusBar;
 
@@ -316,6 +317,18 @@ public class Controller implements Initializable {
     }
 
     public void onAboutMenuItemAction(ActionEvent actionEvent) {
+        Alert aboutAlert = new Alert(Alert.AlertType.INFORMATION);
+        aboutAlert.setTitle("About JavaFX CAD Utility");
+        aboutAlert.setHeaderText("JavaFX CAD Utility\nBased on Intellij IDEA, GitHub and Teamwork");
+        aboutAlert.initStyle(StageStyle.UTILITY);
+        aboutAlert.setContentText("版本："
+                + CommonPath.version + "\n"
+                + "Developers: "
+                + "郑镜竹 宋志元 翟凡荣 侯文轩\n"
+                + "Available on GitHub: \n"
+                + CommonPath.gitHubLink + "\n"
+                + "License: Apache License 2.0");
+        aboutAlert.showAndWait();
     }
 
 
