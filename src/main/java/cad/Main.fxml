@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.geometry.*?>
-<?import javafx.scene.paint.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
+<?import javafx.scene.input.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
 
-<BorderPane fx:id="borderPane" prefHeight="692.0" prefWidth="1051.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.cad.Controller">
+<BorderPane fx:id="borderPane" prefHeight="692.0" prefWidth="1051.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.cad.Controller">
    <center>
    <AnchorPane fx:id="mainPane" onMouseClicked="#onMainPaneMouseClicked" onMouseMoved="#onMouseMovedInMainPane" onMousePressed="#onMainPaneMousePressed" BorderPane.alignment="CENTER" />
    </center>
@@ -20,18 +17,30 @@
      <menus>
        <Menu mnemonicParsing="false" text="File">
          <items>
-           <MenuItem mnemonicParsing="false" onAction="#onNewMenuItemAction" text="New" />
-               <MenuItem mnemonicParsing="false" onAction="#onOpenMenuItemAction" text="Open" />
+           <MenuItem mnemonicParsing="false" onAction="#onNewMenuItemAction" text="New">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="N" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
+                     </accelerator></MenuItem>
+               <MenuItem mnemonicParsing="false" onAction="#onOpenMenuItemAction" text="Open">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="O" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
+                     </accelerator></MenuItem>
                <SeparatorMenuItem mnemonicParsing="false" />
                <MenuItem mnemonicParsing="false" onAction="#onCloseMenuItemAction" text="Close" />
                <MenuItem mnemonicParsing="false" text="Close All" />
                <SeparatorMenuItem mnemonicParsing="false" />
-               <MenuItem mnemonicParsing="false" onAction="#onSaveMenuItemAction" text="Save" />
+               <MenuItem mnemonicParsing="false" onAction="#onSaveMenuItemAction" text="Save">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="S" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
+                     </accelerator></MenuItem>
                <MenuItem mnemonicParsing="false" onAction="#onSaveAsMenuItemAction" text="Save As" />
                <MenuItem mnemonicParsing="false" text="Save All" />
                <SeparatorMenuItem mnemonicParsing="false" />
                <MenuItem mnemonicParsing="false" onAction="#onRefreshMenuItemAction" text="Refresh" />
-               <MenuItem mnemonicParsing="false" onAction="#onRestartMenuItemAction" text="Restart" />
+               <MenuItem mnemonicParsing="false" onAction="#onRestartMenuItemAction" text="Restart">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="R" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+                     </accelerator></MenuItem>
                <MenuItem mnemonicParsing="false" onAction="#onExitMenuItemAction" text="Exit" />
          </items>
        </Menu>
@@ -40,21 +49,42 @@
            <MenuItem mnemonicParsing="false" onAction="#onUndoMenuItemAction" text="Undo" />
                <MenuItem mnemonicParsing="false" onAction="#onRedoMenuItemAction" text="Redo" />
                <SeparatorMenuItem mnemonicParsing="false" />
-               <MenuItem mnemonicParsing="false" onAction="#onCutMenuItemAction" text="Cut" />
-               <MenuItem mnemonicParsing="false" onAction="#onCopyMenuItemAction" text="Copy" />
-               <MenuItem mnemonicParsing="false" onAction="#onPasteMenuItemAction" text="Paste" />
+               <MenuItem mnemonicParsing="false" onAction="#onCutMenuItemAction" text="Cut">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="X" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
+                     </accelerator></MenuItem>
+               <MenuItem mnemonicParsing="false" onAction="#onCopyMenuItemAction" text="Copy">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="C" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
+                     </accelerator></MenuItem>
+               <MenuItem mnemonicParsing="false" onAction="#onPasteMenuItemAction" text="Paste">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="V" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
+                     </accelerator></MenuItem>
                <SeparatorMenuItem mnemonicParsing="false" />
                <MenuItem mnemonicParsing="false" onAction="#onDeleteMenuItemAction" text="Delete" />
-               <MenuItem mnemonicParsing="false" onAction="#onSelectAllMenuItemAction" text="Select All" />
+               <MenuItem mnemonicParsing="false" onAction="#onSelectAllMenuItemAction" text="Select All">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="A" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
+                     </accelerator></MenuItem>
                <SeparatorMenuItem mnemonicParsing="false" />
-               <MenuItem mnemonicParsing="false" onAction="#onFindMenuItemAction" text="Find" />
+               <MenuItem mnemonicParsing="false" onAction="#onFindMenuItemAction" text="Find">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="F" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
+                     </accelerator></MenuItem>
                <MenuItem mnemonicParsing="false" onAction="#onListRecordMenuItemAction" text="List Record" />
          </items>
        </Menu>
          <Menu mnemonicParsing="false" text="Tools">
            <items>
-               <CheckMenuItem fx:id="painterToolBarMenuItem" mnemonicParsing="false" onAction="#onPainterToolMenuItemAction" selected="true" text="Painter Tool" />
-               <CheckMenuItem fx:id="colorToolBarMenuItem" mnemonicParsing="false" onAction="#onColorToolMenuItemAction" selected="true" text="Color Tool" />
+               <CheckMenuItem fx:id="painterToolBarMenuItem" mnemonicParsing="false" onAction="#onPainterToolMenuItemAction" selected="true" text="Painter Tool">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="P" control="UP" meta="UP" shift="DOWN" shortcut="DOWN" />
+                     </accelerator></CheckMenuItem>
+               <CheckMenuItem fx:id="colorToolBarMenuItem" mnemonicParsing="false" onAction="#onColorToolMenuItemAction" selected="true" text="Color Tool">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="C" control="UP" meta="UP" shift="DOWN" shortcut="DOWN" />
+                     </accelerator></CheckMenuItem>
            </items>
          </Menu>
          <Menu mnemonicParsing="false" text="Window">
@@ -187,7 +217,7 @@
                </TilePane>
                <ColorPicker fx:id="colorPicker" onAction="#onColorPickerFinished" prefHeight="34.0" prefWidth="109.0">
                    <value>
-                       <Color blue="1.0" green="0.6344988346099854" />
+                       <Color green="0.6344988346099854" blue="1.0" />
                    </value>
                </ColorPicker>
                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="32.0" prefWidth="102.0" text="Color" textAlignment="CENTER">
