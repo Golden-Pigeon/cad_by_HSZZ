@@ -6,7 +6,7 @@ public class Status {
     public static CadPoint startPoint = null;
     public static PaintMode paintMode = PaintMode.CadLine;
     public static Color strokeColor = Color.BLACK;
-    public static Color fillColor = Color.WHITE;
+    public static Color fillColor = Color.TRANSPARENT;
     public static double lineWidth = 1.0;
     public static CadShape selected = null;
     public static boolean selectAll = false;

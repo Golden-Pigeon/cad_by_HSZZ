@@ -15,6 +15,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -344,9 +345,7 @@ public class Controller implements Initializable {
         githubLink.setOnAction((event -> {
             try {
                 Desktop.getDesktop().browse(new URL(CommonPath.gitHubLink).toURI());
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (URISyntaxException e) {
+            } catch (IOException | URISyntaxException e) {
                 e.printStackTrace();
             }
         }));
@@ -369,8 +368,7 @@ public class Controller implements Initializable {
                 Status.paintMode = PaintMode.CadOval;
                 break;
             case "eraserButton":
-                Status.paintMode = PaintMode.CadEraser;//TODO: erase mode
-
+                Status.paintMode = PaintMode.CadEraser;
                 break;
             case "rectButton":
                 Status.paintMode = PaintMode.CadRectangle;
@@ -385,6 +383,18 @@ public class Controller implements Initializable {
     }
 
     public void onMainPaneMouseClicked(MouseEvent mouseEvent) {
+        if(Status.selected != null){
+            Shape shape = ((Shape)mainPane.lookup("#" + String.valueOf(Status.selected.getId())));
+            shape.setStroke(Status.strokeColor);
+            Status.selected = null;
+        }
+        if(Status.selectAll){
+            Status.selectAll = false;
+            mainPane.getChildren().forEach(t ->{
+                if(t instanceof Shape)
+                    ((Shape)t).setStroke(Status.strokeColor);//TODO: recover the origin color
+            });
+        }
         double x = mouseEvent.getX();
         double y = mouseEvent.getY();
         switch (Status.paintMode){
@@ -398,6 +408,7 @@ public class Controller implements Initializable {
                     record.getActionList().add(shape);
                     Line line = new Line(Status.startPoint.getX(), Status.startPoint.getY(), x, y);
                     Status.startPoint = null;
+                    line.setStroke(Status.strokeColor);
                     line.setId(String.valueOf(shape.getId()));
                     line.setStrokeWidth(Status.lineWidth);//TODO: update Record to support line width
                     line.setOnMouseClicked(event -> {
@@ -408,14 +419,50 @@ public class Controller implements Initializable {
                         else {
                             Status.selected = shape;
                             Status.selectAll = false;
+                            Status.startPoint = null;
                             mainPane.getChildren().forEach(t ->{
                                 if(t instanceof Shape)
                                     ((Shape)t).setStroke(Status.strokeColor);//TODO: recover the origin color
                             });
                             line.setStroke(Color.RED);
                         }
+                        event.consume();
                     });
                     mainPane.getChildren().add(line);
+                }
+                break;
+            case CadRectangle:
+                if(Status.startPoint == null){
+                    Status.startPoint = new CadPoint(x, y);
+                } else {
+                    CadShape shape = CadShape.getCadShape(PaintMode.CadRectangle, Status.startPoint, new CadPoint(x, y), Status.strokeColor, Status.fillColor);
+                    record.getActionList().add(shape);
+                    Rectangle rect = new Rectangle(Math.min(Status.startPoint.getX(), x), Math.min(Status.startPoint.getY(), y),
+                            Math.abs(x - Status.startPoint.getX()), Math.abs(y - Status.startPoint.getY()));
+                    Status.startPoint = null;
+                    rect.setStroke(Status.strokeColor);
+                    rect.setFill(Status.fillColor);
+                    rect.setId(String.valueOf(shape.getId()));
+                    rect.setStrokeWidth(Status.lineWidth);//TODO: update Record to support line width
+                    rect.setOnMouseClicked(event -> {
+                        //TODO: ignore central zone
+                        if(Status.paintMode == PaintMode.CadEraser){
+                            rect.setVisible(false);
+                            //TODO: improve delete operations
+                        }
+                        else {
+                            Status.selected = shape;
+                            Status.selectAll = false;
+                            Status.startPoint = null;
+                            mainPane.getChildren().forEach(t ->{
+                                if(t instanceof Shape)
+                                    ((Shape)t).setStroke(Status.strokeColor);//TODO: recover the origin color
+                            });
+                            rect.setStroke(Color.RED);
+                        }
+                        event.consume();
+                    });
+                    mainPane.getChildren().add(rect);
                 }
         }
     }
