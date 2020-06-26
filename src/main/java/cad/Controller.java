@@ -45,6 +45,7 @@ public class Controller implements Initializable {
 //    public Button textButton;
     private File parentDir;
     private String child;
+    private double mouseX, mouseY;
 
 
 
@@ -110,8 +111,29 @@ public class Controller implements Initializable {
 
     @FXML
     public void onColorButtonClicked(ActionEvent actionEvent) {
-        Button name = (Button) actionEvent.getSource();
-        System.out.println(name.getId());
+        Button currButton = (Button) actionEvent.getSource();
+        String name = currButton.getId();
+        if(name.equals("preset_black"))
+            Status.strokeColor = Color.web("#000000");
+        if(name.equals("preset_white"))
+            Status.strokeColor = Color.web("#ffffff");
+        if(name.equals("preset_gary"))
+            Status.strokeColor = Color.web("#c0c0c0");
+        if(name.equals("preset_darkgray"))
+            Status.strokeColor = Color.web("#696969");
+        if(name.equals("preset_blue"))
+            Status.strokeColor = Color.web("#00bfff");
+        if(name.equals("preset_orange"))
+            Status.strokeColor = Color.web("#ffa500");
+        if(name.equals("preset_red"))
+            Status.strokeColor = Color.web("#ff0000");
+        if(name.equals("preset_gold"))
+            Status.strokeColor = Color.web("#ffd700");
+        if(name.equals("preset_green"))
+            Status.strokeColor = Color.web("#00ff00");
+        if(name.equals("preset_yellow"))
+            Status.strokeColor = Color.web("#ffff00");
+        System.out.println(Status.strokeColor);
     }
 
     @FXML
@@ -123,7 +145,7 @@ public class Controller implements Initializable {
     @FXML
     public void onSizeComboBoxClicked(MouseEvent mouseEvent) {
         List<String> sizeOptions = new ArrayList<>();
-        for (int i = 8; i <= 20; i += 2) {
+        for (int i = 2; i <= 20; i += 2) {
             sizeOptions.add(String.valueOf(i));
         }
 
@@ -166,6 +188,8 @@ public class Controller implements Initializable {
     public void onMouseMovedInMainPane(MouseEvent mouseEvent) {
         CadStatusBar.setStatusText("Tool: " + Status.paintMode.toString() + " @ "
                 + String.format("%.1f, %.1fpx ", mouseEvent.getX(), mouseEvent.getY()));
+        mouseX = mouseEvent.getX();
+        mouseY = mouseEvent.getY();
     }
 
     public void onNewMenuItemAction(ActionEvent actionEvent) {
@@ -385,6 +409,8 @@ public class Controller implements Initializable {
                 Status.paintMode = PaintMode.CadText;
                 break;
         }
+        CadStatusBar.setStatusText("Tool: " + Status.paintMode + "@"
+                + String.format("%.1f, %.1fpx ", mouseX, mouseY));
     }
 
     public void onMainPaneMouseClicked(MouseEvent mouseEvent) {
