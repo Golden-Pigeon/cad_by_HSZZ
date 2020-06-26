@@ -1,9 +1,11 @@
 package main.java.cad;
 
+import java.io.Serializable;
+
 /**
  * 定义图形类型
  */
-public enum PaintMode {
+public enum PaintMode implements Serializable {
     CadLine, // 直线
     CadCircle, // 圆形
     CadRectangle, // 直角矩形

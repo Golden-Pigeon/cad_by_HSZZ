@@ -2,6 +2,7 @@ package main.java.cad;
 
 import javafx.scene.paint.Color;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -10,14 +11,17 @@ import java.util.*;
  * @author 侯文轩
  * @version 1.1
  */
-public class CadShape {
+public class CadShape implements Serializable {
 
     PaintMode type;
     CadPoint startPoint = new CadPoint(0, 0);//起始点(左上角)
     CadPoint endPoint = new CadPoint(0, 0);//终点(右下角)
-    Color lineColor = Color.BLACK;// 边线颜色
-    Color fillColor = Color.TRANSPARENT;// 填充颜色, 默认透明
-    List<CadPoint> curvePoints; //自定义曲线的采样点
+    transient Color lineColor = Color.BLACK;// 边线颜色
+    transient Color fillColor = Color.TRANSPARENT;// 填充颜色, 默认透明
+    String lineColorString = Color.BLACK.toString();
+    String fillColorString = Color.TRANSPARENT.toString();
+    transient List<CadPoint> curvePoints; //自定义曲线的采样点
+    CadPoint[] curvePointsArray; //自定义曲线的采样点, 用来序列化(原生List不支持序列化)
     String textContent; //文本"图形的内容"
     String lineWidth = "8"; // 默认线宽
 
@@ -54,6 +58,7 @@ public class CadShape {
         newShape.type = PaintMode.CadCurve;
         newShape.curvePoints = curvePoints;
         newShape.lineColor = lineColor;
+        newShape.curvePointsArray = (CadPoint[]) curvePoints.toArray();
         return newShape;
     }
 

@@ -1,6 +1,8 @@
 package main.java.cad;
 
-public class CadPoint {
+import java.io.Serializable;
+
+public class CadPoint implements Serializable {
     private final double x;
     private final double y;
 

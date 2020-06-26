@@ -1,5 +1,6 @@
 package main.java.cad;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
  *
  *
  */
-public class Record {
+public class Record implements Serializable {
 
     private final List<CadShape> actionList = new LinkedList<>();// 当前已保存的操作
     private final List<CadShape> deleteList = new LinkedList<>();// 当前已撤销/删除的操作
