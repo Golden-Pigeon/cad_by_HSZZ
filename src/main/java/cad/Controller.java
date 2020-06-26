@@ -14,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
@@ -22,6 +23,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import main.java.cad.CommonDefinitions.CommonPath;
 import main.java.cad.MainCadStageParts.CadStatusBar;
+import main.java.cad.shape.CadEllipse;
+import main.java.cad.shape.CadLine;
 import main.java.cad.shape.CadRect;
 import main.java.cad.util.CadMath;
 
@@ -442,29 +445,8 @@ public class Controller implements Initializable {
                     double sy = Status.startPoint.getY();
                     CadShape shape = CadShape.getCadShape(PaintMode.CadLine, Status.startPoint, new CadPoint(x, y), Status.strokeColor, Status.fillColor, Status.lineWidth);
                     record.getActionList().add(shape);
-                    Line line = new Line(sx, sy, x, y);
+                    Line line = new CadLine(sx, sy, x, y, shape, mainPane);
                     Status.startPoint = null;
-                    line.setStroke(Status.strokeColor);
-                    line.setId(String.valueOf(shape.getId()));
-                    line.setStrokeWidth(Status.lineWidth);//TODO: update Record to support line width
-                    line.setOnMouseClicked(event -> {
-                        System.out.println(line.getId() + " clicked");
-                        if(Status.paintMode == PaintMode.CadEraser){
-                            line.setVisible(false);
-                            //TODO: improve delete operations
-                        }
-                        else {
-                            Status.selected = shape;
-                            Status.selectAll = false;
-                            Status.startPoint = null;
-                            mainPane.getChildren().forEach(t ->{
-                                if(t instanceof Shape)
-                                    ((Shape)t).setStroke(Status.strokeColor);//TODO: recover the origin color
-                            });
-                            line.setStroke(Color.RED);
-                        }
-                        //event.consume();
-                    });
                     mainPane.getChildren().add(line);
                 }
                 break;
@@ -478,10 +460,19 @@ public class Controller implements Initializable {
                     record.getActionList().add(shape);
                     Rectangle rect = new CadRect(sx, sy, x, y, shape, mainPane);
                     Status.startPoint = null;
-
-                    rect.setStrokeWidth(Status.lineWidth);//TODO: update Record to support line width
-
                     mainPane.getChildren().add(rect);
+                }
+            case CadOval:
+                if(Status.startPoint == null){
+                    Status.startPoint = new CadPoint(x, y);
+                } else {
+                    double sx = Status.startPoint.getX();
+                    double sy = Status.startPoint.getY();
+                    CadShape shape = CadShape.getCadShape(PaintMode.CadRectangle, Status.startPoint, new CadPoint(x, y), Status.strokeColor, Status.fillColor, Status.lineWidth);
+                    record.getActionList().add(shape);
+                    Ellipse ell = new CadEllipse(sx, sy, x, y, shape, mainPane);
+                    Status.startPoint = null;
+                    mainPane.getChildren().add(ell);
                 }
         }
     }

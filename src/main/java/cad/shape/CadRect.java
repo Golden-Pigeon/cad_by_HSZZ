@@ -21,8 +21,7 @@ public class CadRect extends Rectangle {
                         if(!(CadMath.isSqueezed(event.getX(), startX, endX, getStrokeWidth()) &&
                                 CadMath.isSqueezed(event.getY(), startY, endY, getStrokeWidth()))) {
                             if (Status.paintMode == PaintMode.CadEraser) {
-                                setVisible(false);
-                                //TODO: improve delete operations
+                                parent.getChildren().remove(this);
                             } else {
                                 Status.selected = shape;
                                 Status.selectAll = false;
@@ -36,10 +35,11 @@ public class CadRect extends Rectangle {
                             System.out.println("consumed");
                             event.consume();
                         }
+
         });
         setStroke(Status.strokeColor);
         setFill(Status.fillColor);
         setId(String.valueOf(shape.getId()));
-
+        setStrokeWidth(Status.lineWidth);
     }
 }
