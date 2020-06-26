@@ -1,5 +1,6 @@
 package main.java.cad;
 
+import javafx.scene.control.Alert;
 import javafx.scene.paint.Color;
 
 import java.io.*;
@@ -115,6 +116,7 @@ class FileImportExport {
         String[] lines = decryptedContent.toString().split("\n");
         String[] lineContent;
         if (!lines[0].equals("JavaFX_CAD_HSZZ")) {
+            Alert failedToDecryptAlert;
             //TODO Alert - 密钥错误或者文件损坏
             return false;
         }
