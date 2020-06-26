@@ -22,6 +22,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import main.java.cad.CommonDefinitions.CommonPath;
 import main.java.cad.MainCadStageParts.CadStatusBar;
+import main.java.cad.shape.CadRect;
+import main.java.cad.util.CadMath;
 
 import java.awt.*;
 import java.io.File;
@@ -432,17 +434,21 @@ public class Controller implements Initializable {
             case CadText:
                 //TODO: Enter Texts
             case CadLine:
+
                 if(Status.startPoint == null){
                     Status.startPoint = new CadPoint(x, y);
                 } else {
+                    double sx = Status.startPoint.getX();
+                    double sy = Status.startPoint.getY();
                     CadShape shape = CadShape.getCadShape(PaintMode.CadLine, Status.startPoint, new CadPoint(x, y), Status.strokeColor, Status.fillColor);
                     record.getActionList().add(shape);
-                    Line line = new Line(Status.startPoint.getX(), Status.startPoint.getY(), x, y);
+                    Line line = new Line(sx, sy, x, y);
                     Status.startPoint = null;
                     line.setStroke(Status.strokeColor);
                     line.setId(String.valueOf(shape.getId()));
                     line.setStrokeWidth(Status.lineWidth);//TODO: update Record to support line width
                     line.setOnMouseClicked(event -> {
+                        System.out.println(line.getId() + " clicked");
                         if(Status.paintMode == PaintMode.CadEraser){
                             line.setVisible(false);
                             //TODO: improve delete operations
@@ -457,7 +463,7 @@ public class Controller implements Initializable {
                             });
                             line.setStroke(Color.RED);
                         }
-                        event.consume();
+                        //event.consume();
                     });
                     mainPane.getChildren().add(line);
                 }
@@ -466,33 +472,15 @@ public class Controller implements Initializable {
                 if(Status.startPoint == null){
                     Status.startPoint = new CadPoint(x, y);
                 } else {
+                    double sx = Status.startPoint.getX();
+                    double sy = Status.startPoint.getY();
                     CadShape shape = CadShape.getCadShape(PaintMode.CadRectangle, Status.startPoint, new CadPoint(x, y), Status.strokeColor, Status.fillColor);
                     record.getActionList().add(shape);
-                    Rectangle rect = new Rectangle(Math.min(Status.startPoint.getX(), x), Math.min(Status.startPoint.getY(), y),
-                            Math.abs(x - Status.startPoint.getX()), Math.abs(y - Status.startPoint.getY()));
+                    Rectangle rect = new CadRect(sx, sy, x, y, shape, mainPane);
                     Status.startPoint = null;
-                    rect.setStroke(Status.strokeColor);
-                    rect.setFill(Status.fillColor);
-                    rect.setId(String.valueOf(shape.getId()));
+
                     rect.setStrokeWidth(Status.lineWidth);//TODO: update Record to support line width
-                    rect.setOnMouseClicked(event -> {
-                        //TODO: ignore central zone
-                        if(Status.paintMode == PaintMode.CadEraser){
-                            rect.setVisible(false);
-                            //TODO: improve delete operations
-                        }
-                        else {
-                            Status.selected = shape;
-                            Status.selectAll = false;
-                            Status.startPoint = null;
-                            mainPane.getChildren().forEach(t ->{
-                                if(t instanceof Shape)
-                                    ((Shape)t).setStroke(Status.strokeColor);//TODO: recover the origin color
-                            });
-                            rect.setStroke(Color.RED);
-                        }
-                        event.consume();
-                    });
+
                     mainPane.getChildren().add(rect);
                 }
         }
