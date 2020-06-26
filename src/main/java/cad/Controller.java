@@ -435,7 +435,8 @@ public class Controller implements Initializable {
                 if(Status.startPoint == null){
                     Status.startPoint = new CadPoint(x, y);
                 } else {
-                    CadShape shape = CadShape.getCadShape(PaintMode.CadLine, Status.startPoint, new CadPoint(x, y), Status.strokeColor, Status.fillColor);
+                    CadShape shape = CadShape.getCadShape(PaintMode.CadLine, Status.startPoint, new CadPoint(x, y),
+                            Status.strokeColor, Status.fillColor, (int) Status.lineWidth);
                     record.getActionList().add(shape);
                     Line line = new Line(Status.startPoint.getX(), Status.startPoint.getY(), x, y);
                     Status.startPoint = null;
@@ -466,7 +467,8 @@ public class Controller implements Initializable {
                 if(Status.startPoint == null){
                     Status.startPoint = new CadPoint(x, y);
                 } else {
-                    CadShape shape = CadShape.getCadShape(PaintMode.CadRectangle, Status.startPoint, new CadPoint(x, y), Status.strokeColor, Status.fillColor);
+                    CadShape shape = CadShape.getCadShape(PaintMode.CadRectangle, Status.startPoint, new CadPoint(x, y),
+                            Status.strokeColor, Status.fillColor, (int) Status.lineWidth);
                     record.getActionList().add(shape);
                     Rectangle rect = new Rectangle(Math.min(Status.startPoint.getX(), x), Math.min(Status.startPoint.getY(), y),
                             Math.abs(x - Status.startPoint.getX()), Math.abs(y - Status.startPoint.getY()));

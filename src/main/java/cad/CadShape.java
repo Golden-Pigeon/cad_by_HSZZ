@@ -19,7 +19,7 @@ public class CadShape {
     Color fillColor = Color.TRANSPARENT;// 填充颜色, 默认透明
     List<CadPoint> curvePoints; //自定义曲线的采样点
     String textContent; //文本"图形的内容"
-    String lineWidth = "8"; // 默认线宽
+    int lineWidth = 8; // 默认线宽
 
     private static int idCnt = 0;//总id计数器
     private final int id = idCnt++; // 当前图形的ID
@@ -27,33 +27,37 @@ public class CadShape {
     private CadShape() {
     }
 
-    public static CadShape getCadShape(PaintMode type, CadPoint startPoint, CadPoint endPoint, Color lineColor, Color fillColor) {
+    public static CadShape getCadShape(PaintMode type, CadPoint startPoint, CadPoint endPoint,
+                                       Color lineColor, Color fillColor, int lineWidth) {
         CadShape newShape = new CadShape();
         newShape.type = type;
         newShape.startPoint = startPoint;
         newShape.endPoint = endPoint;
         newShape.lineColor = lineColor;
         newShape.fillColor = fillColor;
+        newShape.lineWidth = lineWidth;
         return newShape;
     }
 
-    public static CadShape getCadShape(PaintMode type, String textContent, Color lineColor) {
+    public static CadShape getCadShape(PaintMode type, String textContent, Color lineColor, int lineWidth) {
         CadShape newShape = new CadShape();
         if (type != PaintMode.CadText)
             return null;
         newShape.type = PaintMode.CadText;
         newShape.textContent = textContent;
         newShape.lineColor = lineColor;
+        newShape.lineWidth = lineWidth;
         return newShape;
     }
 
-    public static CadShape getCadShape(PaintMode type, List<CadPoint> curvePoints, Color lineColor) {
+    public static CadShape getCadShape(PaintMode type, List<CadPoint> curvePoints, Color lineColor, int lineWidth) {
         CadShape newShape = new CadShape();
         if (type != PaintMode.CadCurve)
             return null;
         newShape.type = PaintMode.CadCurve;
         newShape.curvePoints = curvePoints;
         newShape.lineColor = lineColor;
+        newShape.lineWidth = lineWidth;
         return newShape;
     }
 
