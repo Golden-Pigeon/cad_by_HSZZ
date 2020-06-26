@@ -123,12 +123,12 @@ class FileImportExport {
         int shapeNum = Integer.parseInt(lines[1]);
 
         String[] colors, points;
-        int lineWidth;
+        double lineWidth;
         for (int i = 0; i < shapeNum; i++) {
             if (PaintMode.CadLine.toString().equals(lines[i]) ||
                     PaintMode.CadRectangle.toString().equals(lines[i])) {
                 colors = lines[++i].split("\t");
-                lineWidth = Integer.parseInt(lines[++i]);
+                lineWidth = Double.parseDouble(lines[++i]);
                 points = lines[++i].split(" ");
                 shapeList.add(CadShape.getCadShape(PaintMode.CadLine,
                         new CadPoint(Double.parseDouble(points[0]), Double.parseDouble(points[1])),
@@ -153,7 +153,6 @@ class FileImportExport {
                 Color textColor = Color.web(lines[++i]);
                 lineWidth = Integer.parseInt(lines[++i]);
                 shapeList.add(CadShape.getCadShape(PaintMode.CadText, lines[++i], textColor, lineWidth));
-                continue;
             }
             //TODO Eraser类的导入(如需要)
         }

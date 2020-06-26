@@ -440,7 +440,7 @@ public class Controller implements Initializable {
                 } else {
                     double sx = Status.startPoint.getX();
                     double sy = Status.startPoint.getY();
-                    CadShape shape = CadShape.getCadShape(PaintMode.CadLine, Status.startPoint, new CadPoint(x, y), Status.strokeColor, Status.fillColor);
+                    CadShape shape = CadShape.getCadShape(PaintMode.CadLine, Status.startPoint, new CadPoint(x, y), Status.strokeColor, Status.fillColor, Status.lineWidth);
                     record.getActionList().add(shape);
                     Line line = new Line(sx, sy, x, y);
                     Status.startPoint = null;
@@ -474,7 +474,7 @@ public class Controller implements Initializable {
                 } else {
                     double sx = Status.startPoint.getX();
                     double sy = Status.startPoint.getY();
-                    CadShape shape = CadShape.getCadShape(PaintMode.CadRectangle, Status.startPoint, new CadPoint(x, y), Status.strokeColor, Status.fillColor);
+                    CadShape shape = CadShape.getCadShape(PaintMode.CadRectangle, Status.startPoint, new CadPoint(x, y), Status.strokeColor, Status.fillColor, Status.lineWidth);
                     record.getActionList().add(shape);
                     Rectangle rect = new CadRect(sx, sy, x, y, shape, mainPane);
                     Status.startPoint = null;

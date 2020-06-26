@@ -19,7 +19,7 @@ public class CadShape {
     Color fillColor = Color.TRANSPARENT;// 填充颜色, 默认透明
     List<CadPoint> curvePoints; //自定义曲线的采样点
     String textContent; //文本"图形的内容"
-    int lineWidth = 8; // 默认线宽
+    double lineWidth = 8; // 默认线宽
 
     private static int idCnt = 0;//总id计数器
     private final int id = idCnt++; // 当前图形的ID
@@ -28,7 +28,7 @@ public class CadShape {
     }
 
     public static CadShape getCadShape(PaintMode type, CadPoint startPoint, CadPoint endPoint,
-                                       Color lineColor, Color fillColor, int lineWidth) {
+                                       Color lineColor, Color fillColor, double lineWidth) {
         CadShape newShape = new CadShape();
         newShape.type = type;
         newShape.startPoint = startPoint;
@@ -39,7 +39,7 @@ public class CadShape {
         return newShape;
     }
 
-    public static CadShape getCadShape(PaintMode type, String textContent, Color lineColor, int lineWidth) {
+    public static CadShape getCadShape(PaintMode type, String textContent, Color lineColor, double lineWidth) {
         CadShape newShape = new CadShape();
         if (type != PaintMode.CadText)
             return null;
@@ -50,7 +50,7 @@ public class CadShape {
         return newShape;
     }
 
-    public static CadShape getCadShape(PaintMode type, List<CadPoint> curvePoints, Color lineColor, int lineWidth) {
+    public static CadShape getCadShape(PaintMode type, List<CadPoint> curvePoints, Color lineColor, double lineWidth) {
         CadShape newShape = new CadShape();
         if (type != PaintMode.CadCurve)
             return null;
