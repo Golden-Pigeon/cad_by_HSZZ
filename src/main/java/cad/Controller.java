@@ -235,7 +235,6 @@ public class Controller implements Initializable {
         List<String> typeOptions = new ArrayList<>();
         typeOptions.add("stroke");
         typeOptions.add("fill");
-
         ObservableList<String> options = FXCollections.observableArrayList(typeOptions);
         typeComboBox.setItems(options);
         typeComboBox.setEditable(false);
@@ -254,6 +253,7 @@ public class Controller implements Initializable {
         record = new Record();
         parentDir = new File(CommonPath.DEFAULT_SAVE_DIR);
         Date date = new Date();
+        typeComboBox.setValue("stroke");
         //TODO Optimize save file name format like JavaFX_CAD_YY_MM_DD_HR_MIN_SEC.hszz
         //在文件名中, 冒号":"是不被允许的, 需要替换掉
         //否则会报错
@@ -275,7 +275,25 @@ public class Controller implements Initializable {
     }
 
     public void onOpenMenuItemAction(ActionEvent actionEvent) {
-        //TODO: call a msgBox to select file
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("请选择要导入的工作环境...");
+        fileChooser.setInitialDirectory(new File(CommonPath.DEFAULT_SAVE_DIR));
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("导出的工作环境存档 - Workspace Save File", "*.hszz")
+        );
+        Stage mainStage = (Stage) borderPane.getScene().getWindow();
+        File saveFile = fileChooser.showOpenDialog(mainStage);
+        if(saveFile == null)
+            return;
+        if(!FileImportExport.importFromFile(record, 0, saveFile)){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("导入工作空间失败");
+            alert.setHeaderText("由于导入操作遇到错误, 未能从文件" + saveFile.getName() + "导入工作空间");
+            alert.setContentText("请检查文件是否有效");
+            alert.showAndWait();
+            return;
+        }
+        System.out.println("Import Process Finished Successfully");
     }
 
     public void onCloseMenuItemAction(ActionEvent actionEvent) {

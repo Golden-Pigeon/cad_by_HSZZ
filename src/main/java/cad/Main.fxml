@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
@@ -9,7 +8,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane fx:id="borderPane" prefHeight="692.0" prefWidth="1051.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.cad.Controller">
+<BorderPane fx:id="borderPane" prefHeight="692.0" prefWidth="1051.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.cad.Controller">
    <center>
    <AnchorPane fx:id="mainPane" onMouseClicked="#onMainPaneMouseClicked" onMouseDragged="#onMainPaneMouseDragged" onMouseMoved="#onMouseMovedInMainPane" onMousePressed="#onMainPaneMousePressed" onMouseReleased="#onMainPaneMouseReleased" BorderPane.alignment="CENTER" />
    </center>
@@ -217,6 +216,10 @@
    <right>
        <VBox fx:id="colorToolBar" alignment="CENTER" layoutX="949.0" layoutY="181.0" prefHeight="241.0" prefWidth="102.0" style="-fx-background-color: #aaaaaa; -fx-background-radius: 5;">
            <children>
+            <Label text="Type">
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font></Label>
             <ComboBox fx:id="typeComboBox" onMouseClicked="#onTypeComboBoxClicked" prefWidth="150.0" promptText="Type" />
                <TilePane alignment="CENTER" hgap="5.0" prefColumns="2" prefHeight="145.0" prefRows="4" prefWidth="37.0" vgap="5.0">
                    <children>
@@ -237,7 +240,7 @@
                </TilePane>
                <ColorPicker fx:id="colorPicker" onAction="#onColorPickerFinished" prefHeight="34.0" prefWidth="109.0">
                    <value>
-                       <Color blue="1.0" green="0.6344988346099854" />
+                       <Color green="0.6344988346099854" blue="1.0" />
                    </value>
                </ColorPicker>
                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="32.0" prefWidth="102.0" text="Color" textAlignment="CENTER">

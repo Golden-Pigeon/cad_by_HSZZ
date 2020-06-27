@@ -124,13 +124,15 @@ class FileImportExport {
         String unDecryptedContent = new String(bytes, 0, readLength);
         StringBuilder decryptedContent = new StringBuilder();
         char[] charArray = unDecryptedContent.toCharArray();
+
         for (int i = 0; i < charArray.length; i++) {
-            decryptedContent.append((char) (charArray[i] ^ key));
+            //decryptedContent.append((char) (charArray[i] ^ key));
         }
+        decryptedContent.append(unDecryptedContent);
 
         String[] segmentedLists = decryptedContent.toString().split("---------\n");
         String[] fileHeader = segmentedLists[0].split("\n");
-        if (!segmentedLists[0].equals("JavaFX_CAD_HSZZ")) {
+        if (!fileHeader[0].equals("JavaFX_CAD_HSZZ")) {
             Alert failedToDecryptAlert = new Alert(Alert.AlertType.ERROR);
             failedToDecryptAlert.setTitle("导入工作环境存档时遇到了一些问题...");
             failedToDecryptAlert.setHeaderText("导入操作存在一定问题, 因此该存档未能被导入");
@@ -140,8 +142,8 @@ class FileImportExport {
             return false;
         }
         CadShape.setIdCnt(Integer.parseInt(fileHeader[1]));
-        readShapeListFromStringArray(record.getActionList(), segmentedLists[1].split("\n"));
-        return false;
+        readShapeListFromStringArray(record.getActionList(), segmentedLists[1].split("\n"));//PROBLEM!!!
+        return true;
     }
 
     public static boolean readShapeListFromStringArray(List<CadShape> shapeList, String[] lines) {
@@ -156,7 +158,7 @@ class FileImportExport {
                 List<CadPoint> curvePoints = new ArrayList<>();
                 currShapeID = Integer.parseInt(lines[++i]);
                 Color curveColor = Color.web(lines[++i]);
-                lineWidth = Integer.parseInt(lines[++i]);
+                lineWidth = Double.parseDouble(lines[++i]);
                 int pointNum = Integer.parseInt(lines[++i]);
                 points = lines[++i].split(" ");
                 for (int pointCnt = 0; pointCnt < pointNum; pointCnt++) {
@@ -170,7 +172,7 @@ class FileImportExport {
             if (PaintMode.CadText.toString().equals(lines[i])) {
                 currShapeID = Integer.parseInt(lines[++i]);
                 Color textColor = Color.web(lines[++i]);
-                lineWidth = Integer.parseInt(lines[++i]);
+                lineWidth =Double.parseDouble(lines[++i]);
                 shapeList.add(CadShape.getCadShape(PaintMode.CadText, lines[++i], textColor, lineWidth));
                 shapeList.get(shapeList.size() - 1).setId(currShapeID);
             }
@@ -189,7 +191,7 @@ class FileImportExport {
             }
             //TODO Eraser类的导入(如需要)
         }
-        return false;
+        return true;
     }
 
     /**
