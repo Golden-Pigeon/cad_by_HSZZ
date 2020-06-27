@@ -62,22 +62,20 @@ class FileImportExport {
             fileContent.append(currShape.lineWidth + "\n");
             fileContent.append(currShape.startPoint.getX() + " " + currShape.startPoint.getY() + " " +
                     currShape.endPoint.getX() + " " + currShape.endPoint.getY() + "\n");
+        }
+        char[] fileContentCharArray = fileContent.toString().toCharArray();
 
-            char[] fileContentCharArray = fileContent.toString().toCharArray();
-
-            for (int i = 0; i < fileContentCharArray.length; i++) {
-                //fileContentCharArray[i] = (char) (fileContentCharArray[i] ^ key);
-            }
-
-            try {
-                BufferedWriter outFile = new BufferedWriter(new FileWriter(saveFile));
-                outFile.write(fileContentCharArray);
-                outFile.flush();
-                outFile.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            }
+        for (int i = 0; i < fileContentCharArray.length; i++) {
+            //fileContentCharArray[i] = (char) (fileContentCharArray[i] ^ key);
+        }
+        try {
+            BufferedWriter outFile = new BufferedWriter(new FileWriter(saveFile));
+            outFile.write(fileContentCharArray);
+            outFile.flush();
+            outFile.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
         }
         return true;
     }
@@ -149,7 +147,7 @@ class FileImportExport {
                 shapeList.add(CadShape.getCadShape(PaintMode.CadCurve, curvePoints, curveColor, lineWidth));
                 continue;
             }
-            if(PaintMode.CadText.toString().equals(lines[i])) {
+            if (PaintMode.CadText.toString().equals(lines[i])) {
                 Color textColor = Color.web(lines[++i]);
                 lineWidth = Integer.parseInt(lines[++i]);
                 shapeList.add(CadShape.getCadShape(PaintMode.CadText, lines[++i], textColor, lineWidth));
