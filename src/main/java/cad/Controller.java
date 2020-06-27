@@ -3,14 +3,17 @@ package main.java.cad;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -28,6 +31,7 @@ import main.java.cad.shape.CadLine;
 import main.java.cad.shape.CadRect;
 import main.java.cad.util.CadMath;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -41,7 +45,7 @@ import java.util.List;
 public class Controller implements Initializable {
 
 
-//    public Button lineButton;
+    //    public Button lineButton;
 //    public Button penButton;
 //    public Button eclipseButton;
 //    public Button eraseButton;
@@ -51,8 +55,6 @@ public class Controller implements Initializable {
     private File parentDir;
     private String child;
     private double mouseX, mouseY;
-
-
 
     @FXML
     private BorderPane borderPane;
@@ -118,25 +120,25 @@ public class Controller implements Initializable {
     public void onColorButtonClicked(ActionEvent actionEvent) {
         Button currButton = (Button) actionEvent.getSource();
         String name = currButton.getId();
-        if(name.equals("preset_black"))
+        if (name.equals("preset_black"))
             Status.strokeColor = Color.web("#000000");
-        if(name.equals("preset_white"))
+        if (name.equals("preset_white"))
             Status.strokeColor = Color.web("#ffffff");
-        if(name.equals("preset_gary"))
+        if (name.equals("preset_gary"))
             Status.strokeColor = Color.web("#c0c0c0");
-        if(name.equals("preset_darkgray"))
+        if (name.equals("preset_darkgray"))
             Status.strokeColor = Color.web("#696969");
-        if(name.equals("preset_blue"))
+        if (name.equals("preset_blue"))
             Status.strokeColor = Color.web("#00bfff");
-        if(name.equals("preset_orange"))
+        if (name.equals("preset_orange"))
             Status.strokeColor = Color.web("#ffa500");
-        if(name.equals("preset_red"))
+        if (name.equals("preset_red"))
             Status.strokeColor = Color.web("#ff0000");
-        if(name.equals("preset_gold"))
+        if (name.equals("preset_gold"))
             Status.strokeColor = Color.web("#ffd700");
-        if(name.equals("preset_green"))
+        if (name.equals("preset_green"))
             Status.strokeColor = Color.web("#00ff00");
-        if(name.equals("preset_yellow"))
+        if (name.equals("preset_yellow"))
             Status.strokeColor = Color.web("#ffff00");
         System.out.println(Status.strokeColor);
     }
@@ -214,6 +216,14 @@ public class Controller implements Initializable {
     }
 
     public void onSaveMenuItemAction(ActionEvent actionEvent) {
+        /*
+        WritableImage image = mainPane.snapshot(new SnapshotParameters(), null);
+        try {
+            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", new File("666.png"));
+        } catch (IOException ex) {
+
+        }
+        */
         if (!FileImportExport.exportToFile(record, new File(parentDir, child))) {
             System.err.println("save failed");
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -227,16 +237,44 @@ public class Controller implements Initializable {
     public void onSaveAsMenuItemAction(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("保存到...");
+        fileChooser.setInitialDirectory(new File("."));
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Workspace Save File", "*.hszz"),
+                new FileChooser.ExtensionFilter("PNG Snapshot of the Canvas", "*.png")
+        );
         Stage mainStage = (Stage) borderPane.getScene().getWindow();
-        File saving = fileChooser.showOpenDialog(mainStage);
-        if (!FileImportExport.exportToFile(record, saving)) {
+        File saving = fileChooser.showSaveDialog(mainStage);
+        if(saving == null) {
+            return;
+        }
+        String expectedExtensionName = saving.getAbsolutePath().split("\\.")[1];//正则表达式里面 . -> \\.
+        if(expectedExtensionName.toLowerCase().equals("png")) {
+            WritableImage image = mainPane.snapshot(new SnapshotParameters(), null);
+            try {
+                ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", saving);
+            } catch (IOException e) {
+                FileImportExport.showIOExceptionAlert();
+            }
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Saving Process Succeed");
+            alert.setHeaderText("Successfully saved to " + saving.getName());
+            alert.showAndWait();
+            return;
+        }
+        else if (!FileImportExport.exportToFile(record, saving)) {
             System.err.println("save failed");
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("警告");
             alert.setHeaderText("保存失败");
             alert.setContentText("请检查保存路径是否合法");
             alert.showAndWait();
+            return;
         }
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Saving Process Succeed");
+        alert.setHeaderText("Successfully saved to " + saving.getName());
+        alert.showAndWait();
+        return;
     }
 
     public void onRefreshMenuItemAction(ActionEvent actionEvent) {
@@ -393,7 +431,7 @@ public class Controller implements Initializable {
 
 
     public void onToolsButtonAction(ActionEvent actionEvent) {
-        Button button = (Button)actionEvent.getSource();
+        Button button = (Button) actionEvent.getSource();
         switch (button.getId()) {
             case "lineButton":
                 Status.paintMode = PaintMode.CadLine;
@@ -422,26 +460,26 @@ public class Controller implements Initializable {
     }
 
     public void onMainPaneMouseClicked(MouseEvent mouseEvent) {
-        if(Status.selected != null){
-            Shape shape = ((Shape)mainPane.lookup("#" + Status.selected.getId()));
+        if (Status.selected != null) {
+            Shape shape = ((Shape) mainPane.lookup("#" + Status.selected.getId()));
             shape.setStroke(Status.strokeColor);
             //System.out.println(Status.strokeColor);
             Status.selected = null;
         }
-        if(Status.selectAll){
+        if (Status.selectAll) {
             Status.selectAll = false;
-            mainPane.getChildren().forEach(t ->{
-                if(t instanceof Shape)
-                    ((Shape)t).setStroke(Status.strokeColor);//TODO: recover the origin color
+            mainPane.getChildren().forEach(t -> {
+                if (t instanceof Shape)
+                    ((Shape) t).setStroke(Status.strokeColor);//TODO: recover the origin color
             });
         }
         double x = mouseEvent.getX();
         double y = mouseEvent.getY();
-        switch (Status.paintMode){
+        switch (Status.paintMode) {
             case CadText:
                 //TODO: Enter Texts
             case CadLine:
-                if(Status.startPoint == null){
+                if (Status.startPoint == null) {
                     Status.startPoint = new CadPoint(x, y);
                 } else {
                     double sx = Status.startPoint.getX();
@@ -455,7 +493,7 @@ public class Controller implements Initializable {
                 break;
 
             case CadRectangle:
-                if(Status.startPoint == null){
+                if (Status.startPoint == null) {
                     Status.startPoint = new CadPoint(x, y);
                 } else {
                     double sx = Status.startPoint.getX();
@@ -469,7 +507,7 @@ public class Controller implements Initializable {
                 break;
 
             case CadOval:
-                if(Status.startPoint == null){
+                if (Status.startPoint == null) {
                     Status.startPoint = new CadPoint(x, y);
                 } else {
                     double sx = Status.startPoint.getX();

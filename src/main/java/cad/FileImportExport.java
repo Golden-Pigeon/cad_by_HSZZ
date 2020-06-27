@@ -1,8 +1,12 @@
 package main.java.cad;
 
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Alert;
+import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
+import javax.imageio.ImageIO;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +24,7 @@ import java.util.List;
 class FileImportExport {
 
     public static boolean exportToFile(Record record, File file) {
+
         List<CadShape> actionList = record.getActionList();
         StringBuilder fileContent = new StringBuilder();
         BufferedWriter outputStream;
@@ -186,7 +191,7 @@ class FileImportExport {
     /**
      * IO错误时, 弹出提示
      */
-    private static void showIOExceptionAlert() {
+    public static void showIOExceptionAlert() {
         Alert IOExceptionAlert = new Alert(Alert.AlertType.ERROR);
         IOExceptionAlert.setTitle("An IO Error Occurred...");
         IOExceptionAlert.setHeaderText("An IO Error has been detected and reported, " +

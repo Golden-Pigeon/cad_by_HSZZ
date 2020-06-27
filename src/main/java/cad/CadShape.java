@@ -36,6 +36,10 @@ public class CadShape {
         CadShape.idCnt = idCnt;
     }
 
+    public int getId(){
+        return id;
+    }
+
     private CadShape() {
     }
 
@@ -71,9 +75,5 @@ public class CadShape {
         newShape.lineColor = lineColor;
         newShape.lineWidth = lineWidth;
         return newShape;
-    }
-
-    public int getId(){
-        return id;
     }
 }
