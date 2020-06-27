@@ -44,6 +44,7 @@ import java.util.List;
 
 
 public class Controller implements Initializable {
+    public ComboBox<String> typeComboBox;
 
 //    public Button lineButton;
 //    public Button penButton;
@@ -118,33 +119,91 @@ public class Controller implements Initializable {
     public void onColorButtonClicked(ActionEvent actionEvent) {
         Button currButton = (Button) actionEvent.getSource();
         String name = currButton.getId();
-        if (name.equals("preset_black"))
-            Status.strokeColor = Color.web("#000000");
-        if (name.equals("preset_white"))
-            Status.strokeColor = Color.web("#ffffff");
-        if (name.equals("preset_gary"))
-            Status.strokeColor = Color.web("#c0c0c0");
-        if (name.equals("preset_darkgray"))
-            Status.strokeColor = Color.web("#696969");
-        if (name.equals("preset_blue"))
-            Status.strokeColor = Color.web("#00bfff");
-        if (name.equals("preset_orange"))
-            Status.strokeColor = Color.web("#ffa500");
-        if (name.equals("preset_red"))
-            Status.strokeColor = Color.web("#ff0000");
-        if (name.equals("preset_gold"))
-            Status.strokeColor = Color.web("#ffd700");
-        if (name.equals("preset_green"))
-            Status.strokeColor = Color.web("#00ff00");
-        if (name.equals("preset_yellow"))
-            Status.strokeColor = Color.web("#ffff00");
-        System.out.println(Status.strokeColor);
+        if(typeComboBox.getValue().equals("stroke")) {
+            switch (name) {
+                case "preset_black":
+                    Status.strokeColor = Color.web("#000000");
+                    break;
+                case "preset_white":
+                    Status.strokeColor = Color.web("#ffffff");
+                    break;
+                case "preset_gary":
+                    Status.strokeColor = Color.web("#c0c0c0");
+                    break;
+                case "preset_darkgray":
+                    Status.strokeColor = Color.web("#696969");
+                    break;
+                case "preset_blue":
+                    Status.strokeColor = Color.web("#00bfff");
+                    break;
+                case "preset_orange":
+                    Status.strokeColor = Color.web("#ffa500");
+                    break;
+                case "preset_red":
+                    Status.strokeColor = Color.web("#ff0000");
+                    break;
+                case "preset_gold":
+                    Status.strokeColor = Color.web("#ffd700");
+                    break;
+                case "preset_green":
+                    Status.strokeColor = Color.web("#00ff00");
+                    break;
+                case "preset_yellow":
+                    Status.strokeColor = Color.web("#ffff00");
+                    break;
+
+            }
+            System.out.println(Status.strokeColor);
+        }
+        else {
+            switch (name) {
+                case "preset_black":
+                    Status.fillColor = Color.web("#000000");
+                    break;
+                case "preset_white":
+                    Status.fillColor = Color.web("#ffffff");
+                    break;
+                case "preset_gary":
+                    Status.fillColor = Color.web("#c0c0c0");
+                    break;
+                case "preset_darkgray":
+                    Status.fillColor = Color.web("#696969");
+                    break;
+                case "preset_blue":
+                    Status.fillColor = Color.web("#00bfff");
+                    break;
+                case "preset_orange":
+                    Status.fillColor = Color.web("#ffa500");
+                    break;
+                case "preset_red":
+                    Status.fillColor = Color.web("#ff0000");
+                    break;
+                case "preset_gold":
+                    Status.fillColor = Color.web("#ffd700");
+                    break;
+                case "preset_green":
+                    Status.fillColor = Color.web("#00ff00");
+                    break;
+                case "preset_yellow":
+                    Status.fillColor = Color.web("#ffff00");
+                    break;
+            }
+            System.out.println(Status.fillColor);
+        }
+
     }
 
     @FXML
     public void onColorPickerFinished(ActionEvent actionEvent) {
-        Status.strokeColor = colorPicker.getValue();
-        System.out.println(Status.strokeColor.toString());
+        if(typeComboBox.getValue().equals("stroke")) {
+            Status.strokeColor = colorPicker.getValue();
+            System.out.println("stroke");
+        }
+        else {
+            Status.fillColor = colorPicker.getValue();
+            System.out.println("fill");
+        }
+        System.out.println(colorPicker.toString());
     }
 
     @FXML
@@ -170,6 +229,16 @@ public class Controller implements Initializable {
             Status.lineWidth = (int) Double.parseDouble(currComboBoxValue);
             sizeSlider.setValue((int) Double.parseDouble(currComboBoxValue));
         }
+    }
+
+    public void onTypeComboBoxClicked(MouseEvent event) {
+        List<String> typeOptions = new ArrayList<>();
+        typeOptions.add("stroke");
+        typeOptions.add("fill");
+
+        ObservableList<String> options = FXCollections.observableArrayList(typeOptions);
+        typeComboBox.setItems(options);
+        typeComboBox.setEditable(false);
     }
 
     @FXML
@@ -272,7 +341,6 @@ public class Controller implements Initializable {
         alert.setTitle("保存成功");
         alert.setHeaderText("成功保存至" + saving.getName());
         alert.showAndWait();
-        return;
     }
 
     public void onRefreshMenuItemAction(ActionEvent actionEvent) {
@@ -454,6 +522,12 @@ public class Controller implements Initializable {
             case "textButton":
                 Status.paintMode = PaintMode.CadText;
                 break;
+            case "circleButton":
+                Status.paintMode = PaintMode.CadCircle;
+                break;
+            case "fillButton":
+                Status.paintMode = PaintMode.CadFiller;
+                break;
         }
         CadStatusBar.setStatusText("Tool: " + Status.paintMode + "@"
                 + String.format("%.1f, %.1fpx ", mouseX, mouseY));
@@ -486,7 +560,7 @@ public class Controller implements Initializable {
                     double sy = Status.startPoint.getY();
                     CadShape shape = CadShape.getCadShape(PaintMode.CadLine, Status.startPoint, new CadPoint(x, y), Status.strokeColor, Status.fillColor, Status.lineWidth);
                     record.getActionList().add(shape);
-                    Line line = new CadLine(sx, sy, x, y, shape, mainPane);
+                    Line line = new CadLine(sx, sy, x, y, shape, mainPane, record);
                     Status.startPoint = null;
                     mainPane.getChildren().add(line);
                 }
@@ -500,7 +574,7 @@ public class Controller implements Initializable {
                     double sy = Status.startPoint.getY();
                     CadShape shape = CadShape.getCadShape(PaintMode.CadRectangle, Status.startPoint, new CadPoint(x, y), Status.strokeColor, Status.fillColor, Status.lineWidth);
                     record.getActionList().add(shape);
-                    Rectangle rect = new CadRect(sx, sy, x, y, shape, mainPane);
+                    Rectangle rect = new CadRect(sx, sy, x, y, shape, mainPane, record);
                     Status.startPoint = null;
                     mainPane.getChildren().add(rect);
                 }
@@ -514,7 +588,7 @@ public class Controller implements Initializable {
                     double sy = Status.startPoint.getY();
                     CadShape shape = CadShape.getCadShape(PaintMode.CadOval, Status.startPoint, new CadPoint(x, y), Status.strokeColor, Status.fillColor, Status.lineWidth);
                     record.getActionList().add(shape);
-                    Ellipse ell = new CadEllipse(sx, sy, x, y, shape, mainPane);
+                    Ellipse ell = new CadEllipse(sx, sy, x, y, shape, mainPane, record);
                     Status.startPoint = null;
                     mainPane.getChildren().add(ell);
                 }
@@ -527,7 +601,7 @@ public class Controller implements Initializable {
                     double sy = Status.startPoint.getY();
                     CadShape shape = CadShape.getCadShape(PaintMode.CadRectangle_RoundCorner, Status.startPoint, new CadPoint(x, y), Status.strokeColor, Status.fillColor, Status.lineWidth);
                     record.getActionList().add(shape);
-                    Rectangle rect = new CadRect(sx, sy, x, y, shape, mainPane);
+                    Rectangle rect = new CadRect(sx, sy, x, y, shape, mainPane, record);
                     rect.setArcHeight(Status.lineWidth);
                     rect.setArcWidth(Status.lineWidth);
                     Status.startPoint = null;
@@ -542,7 +616,7 @@ public class Controller implements Initializable {
                     double sy = Status.startPoint.getY();
                     CadShape shape = CadShape.getCadShape(PaintMode.CadCircle, Status.startPoint, new CadPoint(x, y), Status.strokeColor, Status.fillColor, Status.lineWidth);
                     record.getActionList().add(shape);
-                    Circle cir = new CadCircle(sx, sy, x, y, shape, mainPane);
+                    Circle cir = new CadCircle(sx, sy, x, y, shape, mainPane, record);
                     Status.startPoint = null;
                     mainPane.getChildren().add(cir);
                 }
@@ -598,8 +672,16 @@ public class Controller implements Initializable {
                 Line line = (Line) mouseEvent.getSource();
                 System.out.println(line.getId() + " clicked");
                 if (Status.paintMode == PaintMode.CadEraser) {
+                    Status.selected = null;
+                    Status.selectAll = false;
+                    Status.startPoint = null;
+                    mainPane.getChildren().forEach(t -> {
+                        if (t instanceof Shape)
+                            ((Shape) t).setStroke(Status.strokeColor);//TODO: recover the origin color
+                    });
                     System.out.println("eraser");
                     Iterator<Node> ite = mainPane.getChildren().iterator();
+                    record.getActionList().remove(shape);
                     String id = line.getId();
 //                    System.out.println("line " + id);
                     while (ite.hasNext()) {
@@ -632,6 +714,7 @@ public class Controller implements Initializable {
             Status.penDrawable = false;
         }
     }
+
 
 
 }

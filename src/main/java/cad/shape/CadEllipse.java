@@ -6,11 +6,12 @@ import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Shape;
 import main.java.cad.CadShape;
 import main.java.cad.PaintMode;
+import main.java.cad.Record;
 import main.java.cad.Status;
 import main.java.cad.util.CadMath;
 
 public class CadEllipse extends Ellipse {
-    public CadEllipse(double startX, double startY, double endX, double endY, CadShape shape, Pane parent){
+    public CadEllipse(double startX, double startY, double endX, double endY, CadShape shape, Pane parent, Record record){
         super((startX + endX) / 2, (startY + endY) / 2,
                 Math.abs((endX - startX) / 2), Math.abs((endY - startY) / 2));
         setOnMouseClicked(event -> {
@@ -18,6 +19,14 @@ public class CadEllipse extends Ellipse {
             if(!CadMath.inEllipse(getCenterX(), getCenterY(), getRadiusX(), getRadiusY(),
                     event.getX(), event.getY(), getStrokeWidth())) {
                 if (Status.paintMode == PaintMode.CadEraser) {
+                    Status.selected = null;
+                    Status.selectAll = false;
+                    Status.startPoint = null;
+                    parent.getChildren().forEach(t -> {
+                        if (t instanceof Shape)
+                            ((Shape) t).setStroke(Status.strokeColor);//TODO: recover the origin color
+                    });
+                    record.getActionList().remove(shape);
                     parent.getChildren().remove(this);
                 } else {
                     Status.selected = shape;

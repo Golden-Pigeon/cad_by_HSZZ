@@ -22,7 +22,6 @@ Platform: GitHub
   - oval
   - round conner rectangle
   - curve
-- draw, select and erase
   - circle
 - eraser
 - file system
@@ -32,11 +31,12 @@ Platform: GitHub
   - exit
   - about
 - toolbar
-- function chosen
+- function choosing
 - status bar
-
+- delete: synchronize with Record
 ##to be implement
-- circle_gui
+- ~~circle_gui~~
+- text
 - menu
   - new
   - open
@@ -45,5 +45,7 @@ Platform: GitHub
   - undo
   - delete
   - list drew info
+  - selectAll
+- ~~delete: synchronize with Record~~
 
 ... ...

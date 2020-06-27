@@ -140,6 +140,15 @@
                                    </image>
                                </ImageView>
                            </graphic></Button>
+                  <Button fx:id="circleButton" mnemonicParsing="false" onAction="#onToolsButtonAction" style="-fx-base: #aaaaaa;">
+                     <graphic>
+                        <ImageView fitHeight="32.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icon/circle.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
                        <Button fx:id="ellipseButton" mnemonicParsing="false" onAction="#onToolsButtonAction" prefHeight="30.0" prefWidth="0.0" style="-fx-base: #aaaaaa;">
                            <graphic>
                                <ImageView fitHeight="33.0" fitWidth="49.0" pickOnBounds="true" preserveRatio="true">
@@ -180,6 +189,15 @@
                                    </image>
                                </ImageView>
                            </graphic></Button>
+                  <Button fx:id="fillButton" mnemonicParsing="false" onAction="#onToolsButtonAction" style="-fx-base: #aaaaaa;">
+                     <graphic>
+                        <ImageView fitHeight="32.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icon/barrel.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
 
                    </children>
                    <padding>
@@ -199,6 +217,7 @@
    <right>
        <VBox fx:id="colorToolBar" alignment="CENTER" layoutX="949.0" layoutY="181.0" prefHeight="241.0" prefWidth="102.0" style="-fx-background-color: #aaaaaa; -fx-background-radius: 5;">
            <children>
+            <ComboBox fx:id="typeComboBox" onMouseClicked="#onTypeComboBoxClicked" prefWidth="150.0" promptText="Type" />
                <TilePane alignment="CENTER" hgap="5.0" prefColumns="2" prefHeight="145.0" prefRows="4" prefWidth="37.0" vgap="5.0">
                    <children>
                        <Button fx:id="preset_black" mnemonicParsing="false" onAction="#onColorButtonClicked" prefHeight="30.0" prefWidth="30.0" style="-fx-base: #000000;" />
