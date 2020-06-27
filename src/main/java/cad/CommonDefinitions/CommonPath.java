@@ -2,7 +2,7 @@ package main.java.cad.CommonDefinitions;
 
 public class CommonPath {
 
-    public static final String version = "0.1.2";
+    public static final String version = "0.2.0";
 
     public static final String gitHubLink = "https://github.com/Golden-Pigeon/cad_by_HSZZ";
 
@@ -10,7 +10,7 @@ public class CommonPath {
     /**
      * 默认存档路径
      */
-    public static final String DEFAULT_SAVE_DIR = "/saved_canvas/";
+    public static final String DEFAULT_SAVE_DIR = "./saved_canvas/";
 
     /**
      * 图标

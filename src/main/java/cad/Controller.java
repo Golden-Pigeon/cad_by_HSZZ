@@ -3,15 +3,18 @@ package main.java.cad;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -29,6 +32,7 @@ import main.java.cad.shape.CadLine;
 import main.java.cad.shape.CadRect;
 import main.java.cad.util.CadMath;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -41,7 +45,6 @@ import java.util.List;
 
 public class Controller implements Initializable {
 
-
 //    public Button lineButton;
 //    public Button penButton;
 //    public Button eclipseButton;
@@ -49,11 +52,10 @@ public class Controller implements Initializable {
 //    public Button rectButton;
 //    public Button roundRectButton;
 //    public Button textButton;
+
     private File parentDir;
     private String child;
     private double mouseX, mouseY;
-
-
 
     @FXML
     private BorderPane borderPane;
@@ -116,25 +118,25 @@ public class Controller implements Initializable {
     public void onColorButtonClicked(ActionEvent actionEvent) {
         Button currButton = (Button) actionEvent.getSource();
         String name = currButton.getId();
-        if(name.equals("preset_black"))
+        if (name.equals("preset_black"))
             Status.strokeColor = Color.web("#000000");
-        if(name.equals("preset_white"))
+        if (name.equals("preset_white"))
             Status.strokeColor = Color.web("#ffffff");
-        if(name.equals("preset_gary"))
+        if (name.equals("preset_gary"))
             Status.strokeColor = Color.web("#c0c0c0");
-        if(name.equals("preset_darkgray"))
+        if (name.equals("preset_darkgray"))
             Status.strokeColor = Color.web("#696969");
-        if(name.equals("preset_blue"))
+        if (name.equals("preset_blue"))
             Status.strokeColor = Color.web("#00bfff");
-        if(name.equals("preset_orange"))
+        if (name.equals("preset_orange"))
             Status.strokeColor = Color.web("#ffa500");
-        if(name.equals("preset_red"))
+        if (name.equals("preset_red"))
             Status.strokeColor = Color.web("#ff0000");
-        if(name.equals("preset_gold"))
+        if (name.equals("preset_gold"))
             Status.strokeColor = Color.web("#ffd700");
-        if(name.equals("preset_green"))
+        if (name.equals("preset_green"))
             Status.strokeColor = Color.web("#00ff00");
-        if(name.equals("preset_yellow"))
+        if (name.equals("preset_yellow"))
             Status.strokeColor = Color.web("#ffff00");
         System.out.println(Status.strokeColor);
     }
@@ -183,7 +185,10 @@ public class Controller implements Initializable {
         record = new Record();
         parentDir = new File(CommonPath.DEFAULT_SAVE_DIR);
         Date date = new Date();
-        child = date.toString() + ".hszz";
+        //TODO Optimize save file name format like JavaFX_CAD_YY_MM_DD_HR_MIN_SEC.hszz
+        //在文件名中, 冒号":"是不被允许的, 需要替换掉
+        //否则会报错
+        child = date.toString().replace(' ', '_').replace(':', '_') + ".hszz";
         statusBar = new CadStatusBar().getCadStatusBar();
         borderPane.setBottom(statusBar);
     }
@@ -210,7 +215,14 @@ public class Controller implements Initializable {
     }
 
     public void onSaveMenuItemAction(ActionEvent actionEvent) {
-        if (!FileImportExport.exportToFile(record, new File("save.save"))) {
+        WritableImage image = mainPane.snapshot(new SnapshotParameters(), null);
+        try {
+            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png",
+                    new File(parentDir, child.replace(".hszz", ".png")));
+        } catch (IOException e) {
+            FileImportExport.showIOExceptionAlert();
+        }
+        if (!FileImportExport.exportToFile(record, new File(parentDir, child))) {
             System.err.println("save failed");
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("警告");
@@ -220,19 +232,47 @@ public class Controller implements Initializable {
         }
     }
 
+    @FXML
     public void onSaveAsMenuItemAction(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("保存到...");
+        fileChooser.setInitialDirectory(new File("."));
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("导出的工作环境存档 - Workspace Save File", "*.hszz"),
+                new FileChooser.ExtensionFilter("PNG格式的画面快照 - PNG Snapshot of the Canvas", "*.png")
+        );
         Stage mainStage = (Stage) borderPane.getScene().getWindow();
-        File saving = fileChooser.showOpenDialog(mainStage);
-        if (!FileImportExport.exportToFile(record, saving)) {
+        File saving = fileChooser.showSaveDialog(mainStage);
+        if (saving == null) {
+            return;
+        }
+        String expectedExtensionName = saving.getAbsolutePath().split("\\.")[1];//正则表达式里面 . -> \\.
+        if (expectedExtensionName.toLowerCase().equals("png")) {
+            WritableImage image = mainPane.snapshot(new SnapshotParameters(), null);
+            try {
+                ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", saving);
+            } catch (IOException e) {
+                FileImportExport.showIOExceptionAlert();
+            }
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("保存成功");
+            alert.setHeaderText("成功保存至 " + saving.getName());
+            alert.showAndWait();
+            return;
+        } else if (!FileImportExport.exportToFile(record, saving)) {
             System.err.println("save failed");
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("警告");
             alert.setHeaderText("保存失败");
             alert.setContentText("请检查保存路径是否合法");
             alert.showAndWait();
+            return;
         }
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("保存成功");
+        alert.setHeaderText("成功保存至" + saving.getName());
+        alert.showAndWait();
+        return;
     }
 
     public void onRefreshMenuItemAction(ActionEvent actionEvent) {
@@ -244,7 +284,7 @@ public class Controller implements Initializable {
         if (!Status.saved) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("重启程序");
-            alert.setHeaderText("您确定要重启吗");
+            alert.setHeaderText("确定要重启吗");
             alert.setContentText("画布尚未保存，重启后将失去所有未保存内容");
             Optional<ButtonType> buttonType = alert.showAndWait();
             if (!buttonType.get().getButtonData().equals(ButtonBar.ButtonData.OK_DONE)) {
@@ -264,10 +304,12 @@ public class Controller implements Initializable {
         });
     }
 
+    @FXML
     public void onExitMenuItemAction(ActionEvent actionEvent) {
         Platform.exit();
     }
 
+    @FXML
     public void onRedoMenuItemAction(ActionEvent actionEvent) {
 /*
         List<CadShape> actionList = record.getActionList();
@@ -363,17 +405,17 @@ public class Controller implements Initializable {
         Alert aboutAlert = new Alert(Alert.AlertType.INFORMATION);
         Hyperlink githubLink = new Hyperlink(CommonPath.gitHubLink);
         githubLink.setText(CommonPath.gitHubLink);
-        aboutAlert.setTitle("About JavaFX CAD Utility");
-        aboutAlert.setHeaderText("JavaFX CAD Utility\nBased on Intellij IDEA, GitHub and Teamwork");
+        aboutAlert.setTitle("关于 JavaFX CAD Utility");
+        aboutAlert.setHeaderText("JavaFX CAD Utility\n基于 Intellij IDEA, GitHub 与 Teamwork(团队协作)");
         aboutAlert.initStyle(StageStyle.UTILITY);
 
         FlowPane flowPane = new FlowPane();
         flowPane.getChildren().addAll(new Label("版本："
                 + CommonPath.version + "\n"
-                + "Developers: "
+                + "开发者: "
                 + "郑镜竹 宋志元 翟凡荣 侯文轩\n"
-                + "License: Apache License 2.0\n"
-                + "Available on GitHub\n"), githubLink);
+                + "许可证: Apache License 2.0\n"
+                + "GitHub链接(觉得不错的话, 就给个Star吧)\n"), githubLink);
 
         githubLink.setOnAction((event -> {
             try {
@@ -389,7 +431,7 @@ public class Controller implements Initializable {
 
 
     public void onToolsButtonAction(ActionEvent actionEvent) {
-        Button button = (Button)actionEvent.getSource();
+        Button button = (Button) actionEvent.getSource();
         switch (button.getId()) {
             case "lineButton":
                 Status.paintMode = PaintMode.CadLine;
@@ -418,26 +460,26 @@ public class Controller implements Initializable {
     }
 
     public void onMainPaneMouseClicked(MouseEvent mouseEvent) {
-        if(Status.selected != null){
-            Shape shape = ((Shape)mainPane.lookup("#" + Status.selected.getId()));
+        if (Status.selected != null) {
+            Shape shape = ((Shape) mainPane.lookup("#" + Status.selected.getId()));
             shape.setStroke(Status.strokeColor);
             //System.out.println(Status.strokeColor);
             Status.selected = null;
         }
-        if(Status.selectAll){
+        if (Status.selectAll) {
             Status.selectAll = false;
-            mainPane.getChildren().forEach(t ->{
-                if(t instanceof Shape)
-                    ((Shape)t).setStroke(Status.strokeColor);//TODO: recover the origin color
+            mainPane.getChildren().forEach(t -> {
+                if (t instanceof Shape)
+                    ((Shape) t).setStroke(Status.strokeColor);//TODO: recover the origin color
             });
         }
         double x = mouseEvent.getX();
         double y = mouseEvent.getY();
-        switch (Status.paintMode){
+        switch (Status.paintMode) {
             case CadText:
                 //TODO: Enter Texts
             case CadLine:
-                if(Status.startPoint == null){
+                if (Status.startPoint == null) {
                     Status.startPoint = new CadPoint(x, y);
                 } else {
                     double sx = Status.startPoint.getX();
@@ -451,7 +493,7 @@ public class Controller implements Initializable {
                 break;
 
             case CadRectangle:
-                if(Status.startPoint == null){
+                if (Status.startPoint == null) {
                     Status.startPoint = new CadPoint(x, y);
                 } else {
                     double sx = Status.startPoint.getX();
@@ -465,7 +507,7 @@ public class Controller implements Initializable {
                 break;
 
             case CadOval:
-                if(Status.startPoint == null){
+                if (Status.startPoint == null) {
                     Status.startPoint = new CadPoint(x, y);
                 } else {
                     double sx = Status.startPoint.getX();
