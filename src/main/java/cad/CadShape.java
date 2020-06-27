@@ -21,6 +21,14 @@ public class CadShape {
     String textContent; //文本"图形的内容"
     double lineWidth = 8; // 默认线宽
 
+    public static int getIdCnt() {
+        return idCnt;
+    }
+
+    public static void setIdCnt(int idCnt) {
+        CadShape.idCnt = idCnt;
+    }
+
     private static int idCnt = 0;//总id计数器
     private final int id = idCnt++; // 当前图形的ID
 

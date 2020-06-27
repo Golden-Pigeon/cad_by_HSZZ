@@ -211,7 +211,7 @@ public class Controller implements Initializable {
     }
 
     public void onSaveMenuItemAction(ActionEvent actionEvent) {
-        if (!FileImportExport.exportToFile(record, new File(parentDir, child))) {
+        if (!FileImportExport.exportToFile(record, new File("save.save"))) {
             System.err.println("save failed");
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("警告");
@@ -422,6 +422,7 @@ public class Controller implements Initializable {
         if(Status.selected != null){
             Shape shape = ((Shape)mainPane.lookup("#" + Status.selected.getId()));
             shape.setStroke(Status.strokeColor);
+            //System.out.println(Status.strokeColor);
             Status.selected = null;
         }
         if(Status.selectAll){
@@ -437,7 +438,6 @@ public class Controller implements Initializable {
             case CadText:
                 //TODO: Enter Texts
             case CadLine:
-
                 if(Status.startPoint == null){
                     Status.startPoint = new CadPoint(x, y);
                 } else {
@@ -450,6 +450,7 @@ public class Controller implements Initializable {
                     mainPane.getChildren().add(line);
                 }
                 break;
+
             case CadRectangle:
                 if(Status.startPoint == null){
                     Status.startPoint = new CadPoint(x, y);
@@ -462,18 +463,21 @@ public class Controller implements Initializable {
                     Status.startPoint = null;
                     mainPane.getChildren().add(rect);
                 }
+                break;
+
             case CadOval:
                 if(Status.startPoint == null){
                     Status.startPoint = new CadPoint(x, y);
                 } else {
                     double sx = Status.startPoint.getX();
                     double sy = Status.startPoint.getY();
-                    CadShape shape = CadShape.getCadShape(PaintMode.CadRectangle, Status.startPoint, new CadPoint(x, y), Status.strokeColor, Status.fillColor, Status.lineWidth);
+                    CadShape shape = CadShape.getCadShape(PaintMode.CadOval, Status.startPoint, new CadPoint(x, y), Status.strokeColor, Status.fillColor, Status.lineWidth);
                     record.getActionList().add(shape);
                     Ellipse ell = new CadEllipse(sx, sy, x, y, shape, mainPane);
                     Status.startPoint = null;
                     mainPane.getChildren().add(ell);
                 }
+                break;
         }
     }
 }
