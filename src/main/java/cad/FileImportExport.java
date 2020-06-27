@@ -22,8 +22,31 @@ class FileImportExport {
 
     //TODO 导出到文件, 可以包含简单的加密, 比如异或加密
     public static boolean exportToFile(Record record, File file) {
+
         List<CadShape> actionList = record.getActionList();
-        return saveShapeListToFile(record.getActionList(), 0, new File("save.save"));
+
+        StringBuilder fileContent = new StringBuilder();
+        BufferedWriter outputStream = null;
+        try {
+            outputStream = new BufferedWriter(new FileWriter(file));
+        } catch (IOException e) {
+            //TODO Alert
+            e.printStackTrace();
+            return false;
+        }
+        fileContent.append("JavaFX_CAD_HSZZ\n");
+        saveShapeListToStringBuilder(actionList, 0, fileContent);
+
+        try {
+            outputStream.write(fileContent.toString().toCharArray());
+            outputStream.flush();
+            outputStream.close();
+        } catch (IOException e) {
+            //TODO Alert
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -31,15 +54,10 @@ class FileImportExport {
      *
      * @param shapeList 要写的List
      * @param key       密钥
-     * @param saveFile  保存到的文件
      * @return true - 保存成功; false - 遇到IO错误, 文件不存在或者存在但不可写
      */
-    private static boolean saveShapeListToFile(List<CadShape> shapeList, int key, File saveFile) {
-        if (saveFile == null || (saveFile.exists() && !saveFile.canWrite())) {
-            return false;
-        }
-        StringBuffer fileContent = new StringBuffer();
-        fileContent.append("JavaFX_CAD_HSZZ\n");
+    private static char[] saveShapeListToStringBuilder(List<CadShape> shapeList, int key, StringBuilder fileContent) {
+        fileContent.append("---------\n");
         fileContent.append(shapeList.size()).append("\n");
         for (CadShape currShape : shapeList) {
             if (currShape.type == PaintMode.CadCurve) {
@@ -68,25 +86,11 @@ class FileImportExport {
         for (int i = 0; i < fileContentCharArray.length; i++) {
             //fileContentCharArray[i] = (char) (fileContentCharArray[i] ^ key);
         }
-        try {
-            BufferedWriter outFile = new BufferedWriter(new FileWriter(saveFile));
-            outFile.write(fileContentCharArray);
-            outFile.flush();
-            outFile.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
+        return fileContentCharArray;
     }
 
     //TODO 从文件导入
     public static boolean importFromFile(Record record, int key, File saveFile) {
-        return false;
-    }
-
-    public static boolean readShapeListFromFile(List<CadShape> shapeList, int key, File saveFile) {
-
         FileInputStream fileInputStream = null;
         try {
             fileInputStream = new FileInputStream(saveFile);
@@ -111,13 +115,17 @@ class FileImportExport {
             decryptedContent.append((char) (charArray[i] ^ key));
         }
 
-        String[] lines = decryptedContent.toString().split("\n");
-        String[] lineContent;
-        if (!lines[0].equals("JavaFX_CAD_HSZZ")) {
+        String[] segmentedLists = decryptedContent.toString().split("---------\n");
+        if (!segmentedLists[0].equals("JavaFX_CAD_HSZZ")) {
             Alert failedToDecryptAlert;
             //TODO Alert - 密钥错误或者文件损坏
             return false;
         }
+        return false;
+    }
+
+    public static boolean readShapeListFromFile(List<CadShape> shapeList, int key, String[] lines) {
+
         int shapeNum = Integer.parseInt(lines[1]);
 
         String[] colors, points;

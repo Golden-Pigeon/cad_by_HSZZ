@@ -211,7 +211,7 @@ public class Controller implements Initializable {
     }
 
     public void onSaveMenuItemAction(ActionEvent actionEvent) {
-        if (!FileImportExport.exportToFile(record, new File(parentDir, child))) {
+        if (!FileImportExport.exportToFile(record, new File("save.save"))) {
             System.err.println("save failed");
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("警告");
