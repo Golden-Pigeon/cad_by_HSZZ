@@ -15,10 +15,15 @@ public class CadShape {
     PaintMode type;
     CadPoint startPoint = new CadPoint(0, 0);//起始点(左上角)
     CadPoint endPoint = new CadPoint(0, 0);//终点(右下角)
-    Color lineColor = Color.BLACK;// 边线颜色
-    Color fillColor = Color.TRANSPARENT;// 填充颜色, 默认透明
+    public Color lineColor = Color.BLACK;// 边线颜色
+    public Color fillColor = Color.TRANSPARENT;// 填充颜色, 默认透明
     List<CadPoint> curvePoints; //自定义曲线的采样点
     String textContent; //文本"图形的内容"
+
+    public double getLineWidth() {
+        return lineWidth;
+    }
+
     double lineWidth = 8; // 默认线宽
 
     private static int idCnt = 1;//总id计数器
@@ -42,6 +47,8 @@ public class CadShape {
 
     private CadShape() {
     }
+
+
 
     public static CadShape getCadShape(PaintMode type, CadPoint startPoint, CadPoint endPoint,
                                        Color lineColor, Color fillColor, double lineWidth) {

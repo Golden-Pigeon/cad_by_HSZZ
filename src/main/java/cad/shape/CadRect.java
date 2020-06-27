@@ -6,14 +6,19 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
-import main.java.cad.CadShape;
-import main.java.cad.PaintMode;
-import main.java.cad.Record;
-import main.java.cad.Status;
+import main.java.cad.*;
 import main.java.cad.util.CadMath;
 
 
 public class CadRect extends Rectangle {
+
+    public CadRect(CadPoint startPoint, CadPoint endPoint, CadShape cadShape, Pane parent, Record record) {
+        this(startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY(), cadShape, parent, record);
+        this.setStrokeWidth(cadShape.getLineWidth());
+        this.setStroke(cadShape.lineColor);
+        this.setFill(cadShape.fillColor);
+    }
+
     public CadRect(double startX, double startY, double endX, double endY, CadShape shape, Pane parent, Record record){
         super(Math.min(startX, endX), Math.min(startY, endY),
                 Math.abs(endX - startX), Math.abs(endY - startY));

@@ -19,11 +19,9 @@ import java.util.List;
  * @author 侯文轩 郑镜竹
  * @version 1.1
  */
-
-
 class FileImportExport {
 
-    public static boolean exportToFile(Record record, File file) {
+    public static boolean exportToFile(Record record, int key, File file) {
 
         List<CadShape> actionList = record.getActionList();
         StringBuilder fileContent = new StringBuilder();
@@ -97,8 +95,9 @@ class FileImportExport {
 
     /**
      * 从文件导入workspace
-     * @param record 纪录类对象
-     * @param key 密钥
+     *
+     * @param record   纪录类对象
+     * @param key      密钥
      * @param saveFile 存档
      * @return true - 成功导入; false - 密钥错误, 文件损坏或遇到IO错误
      */
@@ -172,7 +171,7 @@ class FileImportExport {
             if (PaintMode.CadText.toString().equals(lines[i])) {
                 currShapeID = Integer.parseInt(lines[++i]);
                 Color textColor = Color.web(lines[++i]);
-                lineWidth =Double.parseDouble(lines[++i]);
+                lineWidth = Double.parseDouble(lines[++i]);
                 shapeList.add(CadShape.getCadShape(PaintMode.CadText, lines[++i], textColor, lineWidth));
                 shapeList.get(shapeList.size() - 1).setId(currShapeID);
             }

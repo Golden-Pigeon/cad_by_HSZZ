@@ -92,7 +92,6 @@ public class Controller implements Initializable {
     private Slider sizeSlider;
 
 
-
     @FXML
     public void onPainterToolMenuItemAction(ActionEvent event) {
         if (painterToolBar.isVisible()) {
@@ -119,7 +118,7 @@ public class Controller implements Initializable {
     public void onColorButtonClicked(ActionEvent actionEvent) {
         Button currButton = (Button) actionEvent.getSource();
         String name = currButton.getId();
-        if(typeComboBox.getValue().equals("stroke")) {
+        if (typeComboBox.getValue().equals("stroke")) {
             switch (name) {
                 case "preset_black":
                     Status.strokeColor = Color.web("#000000");
@@ -154,8 +153,7 @@ public class Controller implements Initializable {
 
             }
             System.out.println(Status.strokeColor);
-        }
-        else {
+        } else {
             switch (name) {
                 case "preset_black":
                     Status.fillColor = Color.web("#000000");
@@ -195,11 +193,10 @@ public class Controller implements Initializable {
 
     @FXML
     public void onColorPickerFinished(ActionEvent actionEvent) {
-        if(typeComboBox.getValue().equals("stroke")) {
+        if (typeComboBox.getValue().equals("stroke")) {
             Status.strokeColor = colorPicker.getValue();
             System.out.println("stroke");
-        }
-        else {
+        } else {
             Status.fillColor = colorPicker.getValue();
             System.out.println("fill");
         }
@@ -282,16 +279,50 @@ public class Controller implements Initializable {
                 new FileChooser.ExtensionFilter("导出的工作环境存档 - Workspace Save File", "*.hszz")
         );
         Stage mainStage = (Stage) borderPane.getScene().getWindow();
+        mainPane.getChildren().clear();
         File saveFile = fileChooser.showOpenDialog(mainStage);
-        if(saveFile == null)
+        if (saveFile == null)
             return;
-        if(!FileImportExport.importFromFile(record, 0, saveFile)){
+        if (!FileImportExport.importFromFile(record, 0, saveFile)) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("导入工作空间失败");
             alert.setHeaderText("由于导入操作遇到错误, 未能从文件" + saveFile.getName() + "导入工作空间");
             alert.setContentText("请检查文件是否有效");
             alert.showAndWait();
             return;
+        }
+        for (CadShape currShape : record.getActionList()) {
+            if (currShape.type.equals(PaintMode.CadLine)) {
+                Line newLine = new CadLine(currShape.startPoint, currShape.endPoint, currShape, mainPane, record);
+                mainPane.getChildren().add(newLine);
+            }
+            if (currShape.type.equals(PaintMode.CadRectangle)) {
+                Rectangle newRect = new CadRect(currShape.startPoint, currShape.endPoint, currShape, mainPane, record);
+                mainPane.getChildren().add(newRect);
+            }
+            if (currShape.type.equals(PaintMode.CadOval)) {
+                Ellipse newEll = new CadEllipse(currShape.startPoint, currShape.endPoint, currShape, mainPane, record);
+                mainPane.getChildren().add(newEll);
+            }
+            if (currShape.type.equals(PaintMode.CadRectangle_RoundCorner)) {
+                Rectangle newRect = new CadRect(currShape.startPoint, currShape.endPoint, currShape, mainPane, record);
+                newRect.setArcHeight(currShape.getLineWidth());
+                newRect.setArcWidth(currShape.getLineWidth());
+                mainPane.getChildren().add(newRect);
+            }
+            if (currShape.type.equals(PaintMode.CadCircle)) {
+                Circle newCircle = new CadCircle(currShape.startPoint, currShape.endPoint, currShape, mainPane, record);
+                mainPane.getChildren().add(newCircle);
+            }
+            if (currShape.type.equals(PaintMode.CadCurve)) {
+                for (int i = 0; i < currShape.curvePoints.size() - 1; i++) {
+                    Line lineSeg = new Line(currShape.curvePoints.get(i).getX(), currShape.curvePoints.get(i).getY(),
+                            currShape.curvePoints.get(i + 1).getX(), currShape.curvePoints.get(i + 1).getY());
+                    lineSeg.setStrokeWidth(currShape.getLineWidth());
+                    lineSeg.setStroke(currShape.lineColor);
+                    mainPane.getChildren().add(lineSeg);
+                }
+            }
         }
         System.out.println("Import Process Finished Successfully");
     }
@@ -309,7 +340,7 @@ public class Controller implements Initializable {
         } catch (IOException e) {
             FileImportExport.showIOExceptionAlert();
         }
-        if (!FileImportExport.exportToFile(record, new File(parentDir, child))) {
+        if (!FileImportExport.exportToFile(record, 0, new File(parentDir, child))) {
             System.err.println("save failed");
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("警告");
@@ -346,7 +377,7 @@ public class Controller implements Initializable {
             alert.setHeaderText("成功保存至 " + saving.getName());
             alert.showAndWait();
             return;
-        } else if (!FileImportExport.exportToFile(record, saving)) {
+        } else if (!FileImportExport.exportToFile(record, 0, saving)) {
             System.err.println("save failed");
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("警告");
@@ -612,7 +643,7 @@ public class Controller implements Initializable {
                 }
                 break;
             case CadRectangle_RoundCorner:
-                if(Status.startPoint == null){
+                if (Status.startPoint == null) {
                     Status.startPoint = new CadPoint(x, y);
                 } else {
                     double sx = Status.startPoint.getX();
@@ -627,7 +658,7 @@ public class Controller implements Initializable {
                 }
                 break;
             case CadCircle:
-                if(Status.startPoint == null){
+                if (Status.startPoint == null) {
                     Status.startPoint = new CadPoint(x, y);
                 } else {
                     double sx = Status.startPoint.getX();
@@ -644,13 +675,13 @@ public class Controller implements Initializable {
     }
 
     public void onMainPaneMousePressed(MouseEvent event) {
-        if(Status.paintMode == PaintMode.CadCurve) {
+        if (Status.paintMode == PaintMode.CadCurve) {
             Status.penDrawable = true;
-            if(Status.points == null) {
+            if (Status.points == null) {
                 Status.points = new ArrayList<>();
                 Status.points.add(new CadPoint(event.getX(), event.getY()));
             }
-            if(Status.tempLines == null) {
+            if (Status.tempLines == null) {
                 Status.tempLines = new ArrayList<>();
             }
 
@@ -658,18 +689,17 @@ public class Controller implements Initializable {
     }
 
     public void onMainPaneMouseDragged(MouseEvent event) {
-        if(Status.penDrawable){
+        if (Status.penDrawable) {
             double x = event.getX();
             double y = event.getY();
             CadPoint last = Status.points.get(Status.points.size() - 1);
-            assert last != null: "last is null";
+            assert last != null : "last is null";
             double lx = last.getX();
             double ly = last.getY();
-            if((lx - x) * (lx - x) + (ly - y) * (ly - y) > 2) {
+            if ((lx - x) * (lx - x) + (ly - y) * (ly - y) > 2) {
                 Line line = new Line(lx, ly, x, y);
                 line.setStrokeWidth(Status.lineWidth);
                 line.setStroke(Status.strokeColor);
-
                 mainPane.getChildren().add(line);
                 Status.tempLines.add(line);
                 Status.points.add(new CadPoint(x, y));
@@ -678,7 +708,7 @@ public class Controller implements Initializable {
     }
 
     public void onMainPaneMouseReleased(MouseEvent event) {
-        if(Status.paintMode.equals(PaintMode.CadCurve)) {
+        if (Status.paintMode.equals(PaintMode.CadCurve)) {
             Status.penDrawable = false;
             CadShape shape = CadShape.getCadShape(PaintMode.CadCurve, Status.points, Status.strokeColor, Status.lineWidth);
             record.getActionList().add(shape);
@@ -732,7 +762,6 @@ public class Controller implements Initializable {
             Status.penDrawable = false;
         }
     }
-
 
 
 }
