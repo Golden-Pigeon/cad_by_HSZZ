@@ -21,4 +21,14 @@ public final class CadMath {
         }
         return a + width < x && x < b - width;
     }
+
+    public static boolean inEllipse(double cx, double cy, double a, double b, double x, double y, double width){
+        if(Math.abs(x - cx) <= 3){
+            return isSqueezed(y, cy + b, cy - b, width);
+        }
+        double k = (y - cy) / (x - cx);
+        double d = a * b * Math.sqrt((1 + k * k) / (b * b + a * a * k * k));
+        double r = Math.sqrt((x - cx) * (x - cx) + (y - cy) * (y - cy));
+        return r < d - width;
+    }
 }
