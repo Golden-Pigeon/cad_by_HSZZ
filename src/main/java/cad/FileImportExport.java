@@ -131,8 +131,12 @@ class FileImportExport {
         String[] segmentedLists = decryptedContent.toString().split("---------\n");
         String[] fileHeader = segmentedLists[0].split("\n");
         if (!segmentedLists[0].equals("JavaFX_CAD_HSZZ")) {
-            Alert failedToDecryptAlert;
-            //TODO Alert - 密钥错误或者文件损坏
+            Alert failedToDecryptAlert = new Alert(Alert.AlertType.ERROR);
+            failedToDecryptAlert.setTitle("导入工作环境存档时遇到了一些问题...");
+            failedToDecryptAlert.setHeaderText("导入操作存在一定问题, 因此该存档未能被导入");
+            failedToDecryptAlert.setContentText("这可能是由以下原因导致的:\n  - 错误的密钥(很可能, 请好好检查一下)\n" +
+                    "-  存档文件已被损坏(这就没办法了...)" +
+                    "-  其他未知的原因\n我们的程序在GitHub上开源(可以从Help - About看到链接), 如果有需要请提交Issue)");
             return false;
         }
         CadShape.setIdCnt(Integer.parseInt(fileHeader[1]));
@@ -193,13 +197,13 @@ class FileImportExport {
      */
     public static void showIOExceptionAlert() {
         Alert IOExceptionAlert = new Alert(Alert.AlertType.ERROR);
-        IOExceptionAlert.setTitle("An IO Error Occurred...");
-        IOExceptionAlert.setHeaderText("An IO Error has been detected and reported, " +
-                "and the saving/reading process has been aborted.");
-        IOExceptionAlert.setContentText("Try:\n  Don't Panic\n" +
-                "  Feel lucky about yourself(This is very rare!)\n" +
-                "  Save again when you&your computer have calmed down\n" +
-                "  And run a chkdsk if possible🍻");
+        IOExceptionAlert.setTitle("我们遇到了一个IO错误...");
+        IOExceptionAlert.setHeaderText("我们检测到系统报告了一个IO错误, " +
+                "因此当前的导入/导出操作已终止.");
+        IOExceptionAlert.setContentText("您可以尝试:\n  保持淡定\n" +
+                "  高兴一点儿(这个异常可不常见!)\n" +
+                "  当你和你的电脑都冷静下来的时候再试一次\n" +
+                "  如果需要的话, 进行一次磁盘检查(比如使用chkdsk命令)");
         IOExceptionAlert.showAndWait();
     }
 }

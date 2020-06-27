@@ -44,14 +44,14 @@ import java.util.List;
 
 public class Controller implements Initializable {
 
-
-    //    public Button lineButton;
+//    public Button lineButton;
 //    public Button penButton;
 //    public Button eclipseButton;
 //    public Button eraseButton;
 //    public Button rectButton;
 //    public Button roundRectButton;
 //    public Button textButton;
+
     private File parentDir;
     private String child;
     private double mouseX, mouseY;
@@ -239,16 +239,16 @@ public class Controller implements Initializable {
         fileChooser.setTitle("保存到...");
         fileChooser.setInitialDirectory(new File("."));
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Workspace Save File", "*.hszz"),
-                new FileChooser.ExtensionFilter("PNG Snapshot of the Canvas", "*.png")
+                new FileChooser.ExtensionFilter("导出的工作环境存档 - Workspace Save File", "*.hszz"),
+                new FileChooser.ExtensionFilter("PNG格式的画面快照 - PNG Snapshot of the Canvas", "*.png")
         );
         Stage mainStage = (Stage) borderPane.getScene().getWindow();
         File saving = fileChooser.showSaveDialog(mainStage);
-        if(saving == null) {
+        if (saving == null) {
             return;
         }
         String expectedExtensionName = saving.getAbsolutePath().split("\\.")[1];//正则表达式里面 . -> \\.
-        if(expectedExtensionName.toLowerCase().equals("png")) {
+        if (expectedExtensionName.toLowerCase().equals("png")) {
             WritableImage image = mainPane.snapshot(new SnapshotParameters(), null);
             try {
                 ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", saving);
@@ -256,12 +256,11 @@ public class Controller implements Initializable {
                 FileImportExport.showIOExceptionAlert();
             }
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Saving Process Succeed");
-            alert.setHeaderText("Successfully saved to " + saving.getName());
+            alert.setTitle("保存成功");
+            alert.setHeaderText("成功保存至 " + saving.getName());
             alert.showAndWait();
             return;
-        }
-        else if (!FileImportExport.exportToFile(record, saving)) {
+        } else if (!FileImportExport.exportToFile(record, saving)) {
             System.err.println("save failed");
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("警告");
@@ -271,8 +270,8 @@ public class Controller implements Initializable {
             return;
         }
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Saving Process Succeed");
-        alert.setHeaderText("Successfully saved to " + saving.getName());
+        alert.setTitle("保存成功");
+        alert.setHeaderText("成功保存至" + saving.getName());
         alert.showAndWait();
         return;
     }
@@ -286,7 +285,7 @@ public class Controller implements Initializable {
         if (!Status.saved) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("重启程序");
-            alert.setHeaderText("您确定要重启吗");
+            alert.setHeaderText("确定要重启吗");
             alert.setContentText("画布尚未保存，重启后将失去所有未保存内容");
             Optional<ButtonType> buttonType = alert.showAndWait();
             if (!buttonType.get().getButtonData().equals(ButtonBar.ButtonData.OK_DONE)) {
@@ -407,17 +406,17 @@ public class Controller implements Initializable {
         Alert aboutAlert = new Alert(Alert.AlertType.INFORMATION);
         Hyperlink githubLink = new Hyperlink(CommonPath.gitHubLink);
         githubLink.setText(CommonPath.gitHubLink);
-        aboutAlert.setTitle("About JavaFX CAD Utility");
-        aboutAlert.setHeaderText("JavaFX CAD Utility\nBased on Intellij IDEA, GitHub and Teamwork");
+        aboutAlert.setTitle("关于 JavaFX CAD Utility");
+        aboutAlert.setHeaderText("JavaFX CAD Utility\n基于 Intellij IDEA, GitHub 与 Teamwork(团队协作)");
         aboutAlert.initStyle(StageStyle.UTILITY);
 
         FlowPane flowPane = new FlowPane();
         flowPane.getChildren().addAll(new Label("版本："
                 + CommonPath.version + "\n"
-                + "Developers: "
+                + "开发者: "
                 + "郑镜竹 宋志元 翟凡荣 侯文轩\n"
-                + "License: Apache License 2.0\n"
-                + "Available on GitHub\n"), githubLink);
+                + "许可证: Apache License 2.0\n"
+                + "GitHub链接(觉得不错的话, 就给个Star吧)\n"), githubLink);
 
         githubLink.setOnAction((event -> {
             try {
