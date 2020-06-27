@@ -1,8 +1,16 @@
 package main.java.cad;
 
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+
+import java.util.List;
 
 public class Status {
+    public static List<Line> tempLines;
+    public static List<CadPoint> points;
+    public static Pane mainPane = null;
+    public static boolean penDrawable = false;
     public static CadPoint startPoint = null;
     public static PaintMode paintMode = PaintMode.CadLine;
     public static Color strokeColor = Color.BLACK;

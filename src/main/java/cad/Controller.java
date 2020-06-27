@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -14,8 +15,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Ellipse;
-import javafx.scene.shape.Line;
+import javafx.scene.shape.*;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.stage.FileChooser;
@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import main.java.cad.CommonDefinitions.CommonPath;
 import main.java.cad.MainCadStageParts.CadStatusBar;
+import main.java.cad.shape.CadCircle;
 import main.java.cad.shape.CadEllipse;
 import main.java.cad.shape.CadLine;
 import main.java.cad.shape.CadRect;
@@ -87,10 +88,7 @@ public class Controller implements Initializable {
     @FXML
     private Slider sizeSlider;
 
-    @FXML
-    public void onMainPaneMousePressed(MouseEvent event) {
 
-    }
 
     @FXML
     public void onPainterToolMenuItemAction(ActionEvent event) {
@@ -181,6 +179,7 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        Status.mainPane = mainPane;
         record = new Record();
         parentDir = new File(CommonPath.DEFAULT_SAVE_DIR);
         Date date = new Date();
@@ -478,6 +477,119 @@ public class Controller implements Initializable {
                     mainPane.getChildren().add(ell);
                 }
                 break;
+            case CadRectangle_RoundCorner:
+                if(Status.startPoint == null){
+                    Status.startPoint = new CadPoint(x, y);
+                } else {
+                    double sx = Status.startPoint.getX();
+                    double sy = Status.startPoint.getY();
+                    CadShape shape = CadShape.getCadShape(PaintMode.CadRectangle_RoundCorner, Status.startPoint, new CadPoint(x, y), Status.strokeColor, Status.fillColor, Status.lineWidth);
+                    record.getActionList().add(shape);
+                    Rectangle rect = new CadRect(sx, sy, x, y, shape, mainPane);
+                    rect.setArcHeight(Status.lineWidth);
+                    rect.setArcWidth(Status.lineWidth);
+                    Status.startPoint = null;
+                    mainPane.getChildren().add(rect);
+                }
+                break;
+            case CadCircle:
+                if(Status.startPoint == null){
+                    Status.startPoint = new CadPoint(x, y);
+                } else {
+                    double sx = Status.startPoint.getX();
+                    double sy = Status.startPoint.getY();
+                    CadShape shape = CadShape.getCadShape(PaintMode.CadCircle, Status.startPoint, new CadPoint(x, y), Status.strokeColor, Status.fillColor, Status.lineWidth);
+                    record.getActionList().add(shape);
+                    Circle cir = new CadCircle(sx, sy, x, y, shape, mainPane);
+                    Status.startPoint = null;
+                    mainPane.getChildren().add(cir);
+                }
+                break;
+
         }
     }
+
+    public void onMainPaneMousePressed(MouseEvent event) {
+        if(Status.paintMode == PaintMode.CadCurve) {
+            Status.penDrawable = true;
+            if(Status.points == null) {
+                Status.points = new ArrayList<>();
+                Status.points.add(new CadPoint(event.getX(), event.getY()));
+            }
+            if(Status.tempLines == null) {
+                Status.tempLines = new ArrayList<>();
+            }
+
+        }
+    }
+
+    public void onMainPaneMouseDragged(MouseEvent event) {
+        if(Status.penDrawable){
+            double x = event.getX();
+            double y = event.getY();
+            CadPoint last = Status.points.get(Status.points.size() - 1);
+            assert last != null: "last is null";
+            double lx = last.getX();
+            double ly = last.getY();
+            if((lx - x) * (lx - x) + (ly - y) * (ly - y) > 2) {
+                Line line = new Line(lx, ly, x, y);
+                line.setStrokeWidth(Status.lineWidth);
+                line.setStroke(Status.strokeColor);
+
+                mainPane.getChildren().add(line);
+                Status.tempLines.add(line);
+                Status.points.add(new CadPoint(x, y));
+            }
+        }
+    }
+
+    public void onMainPaneMouseReleased(MouseEvent event) {
+        if(Status.paintMode.equals(PaintMode.CadCurve)) {
+            Status.penDrawable = false;
+            CadShape shape = CadShape.getCadShape(PaintMode.CadCurve, Status.points, Status.strokeColor, Status.lineWidth);
+            record.getActionList().add(shape);
+            Status.tempLines.forEach(line -> {
+                assert shape != null;
+                line.setId(String.valueOf(shape.getId()));
+            });
+            EventHandler<MouseEvent> handler = mouseEvent -> {
+                Line line = (Line) mouseEvent.getSource();
+                System.out.println(line.getId() + " clicked");
+                if (Status.paintMode == PaintMode.CadEraser) {
+                    System.out.println("eraser");
+                    Iterator<Node> ite = mainPane.getChildren().iterator();
+                    String id = line.getId();
+//                    System.out.println("line " + id);
+                    while (ite.hasNext()) {
+                        Node n = ite.next();
+                        String item = n.getId();
+//                        System.out.println("item " + item);
+                        if (n instanceof Line && item.equals(id)) {
+//                            System.out.println("removed");
+                            ite.remove();
+                        }
+                    }
+                } else {
+                    Status.selected = shape;
+                    Status.selectAll = false;
+                    Status.startPoint = null;
+                    mainPane.getChildren().forEach(t -> {
+                        if (t instanceof Shape)
+                            ((Shape) t).setStroke(Status.strokeColor);//TODO: recover the origin color
+                    });
+                    mainPane.getChildren().forEach(t -> {
+                        if (t instanceof Line && t.getId().equals(line.getId()))
+                            ((Line) t).setStroke(Color.RED);
+                    });
+                }
+                event.consume();
+            };
+            Status.tempLines.forEach(line -> line.setOnMouseClicked(handler));
+            Status.tempLines = null;
+            Status.points = null;
+            Status.penDrawable = false;
+        }
+    }
+
+
 }

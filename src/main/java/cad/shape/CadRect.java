@@ -18,23 +18,31 @@ public class CadRect extends Rectangle {
                 Math.abs(endX - startX), Math.abs(endY - startY));
         setOnMouseClicked(event -> {
             System.out.println(getId() + " clicked");
-                        if(!(CadMath.isSqueezed(event.getX(), startX, endX, getStrokeWidth()) &&
-                                CadMath.isSqueezed(event.getY(), startY, endY, getStrokeWidth()))) {
-                            if (Status.paintMode == PaintMode.CadEraser) {
-                                parent.getChildren().remove(this);
-                            } else {
-                                Status.selected = shape;
-                                Status.selectAll = false;
-                                Status.startPoint = null;
-                                parent.getChildren().forEach(t -> {
-                                    if (t instanceof Shape)
-                                        ((Shape) t).setStroke(Status.strokeColor);//TODO: recover the origin color
-                                });
-                                setStroke(Color.RED);
-                            }
-                            System.out.println("consumed");
-                            event.consume();
-                        }
+            if(!(CadMath.isSqueezed(event.getX(), startX, endX, getStrokeWidth()) &&
+                    CadMath.isSqueezed(event.getY(), startY, endY, getStrokeWidth()))) {
+                if (Status.paintMode == PaintMode.CadEraser) {
+                    parent.getChildren().remove(this);
+                } else {
+                    Status.selected = shape;
+                    Status.selectAll = false;
+                    Status.startPoint = null;
+                    parent.getChildren().forEach(t -> {
+                        if (t instanceof Shape)
+                            ((Shape) t).setStroke(Status.strokeColor);//TODO: recover the origin color
+                    });
+                    setStroke(Color.RED);
+                }
+                System.out.println("consumed");
+                event.consume();
+            }
+            else {
+                //TODO: complete the fillColor selection system to make a test
+                if(Status.paintMode == PaintMode.CadFiller){
+                    setFill(Status.fillColor);
+                    System.out.println("consumed");
+                    event.consume();
+                }
+            }
 
         });
         setStroke(Status.strokeColor);

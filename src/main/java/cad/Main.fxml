@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
@@ -8,9 +9,9 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane fx:id="borderPane" prefHeight="692.0" prefWidth="1051.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.cad.Controller">
+<BorderPane fx:id="borderPane" prefHeight="692.0" prefWidth="1051.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.cad.Controller">
    <center>
-   <AnchorPane fx:id="mainPane" onMouseClicked="#onMainPaneMouseClicked" onMouseMoved="#onMouseMovedInMainPane" onMousePressed="#onMainPaneMousePressed" BorderPane.alignment="CENTER" />
+   <AnchorPane fx:id="mainPane" onMouseClicked="#onMainPaneMouseClicked" onMouseDragged="#onMainPaneMouseDragged" onMouseMoved="#onMouseMovedInMainPane" onMousePressed="#onMainPaneMousePressed" onMouseReleased="#onMainPaneMouseReleased" BorderPane.alignment="CENTER" />
    </center>
    <top>
    <MenuBar prefHeight="32.0" prefWidth="1051.0" BorderPane.alignment="CENTER">
@@ -217,7 +218,7 @@
                </TilePane>
                <ColorPicker fx:id="colorPicker" onAction="#onColorPickerFinished" prefHeight="34.0" prefWidth="109.0">
                    <value>
-                       <Color green="0.6344988346099854" blue="1.0" />
+                       <Color blue="1.0" green="0.6344988346099854" />
                    </value>
                </ColorPicker>
                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="32.0" prefWidth="102.0" text="Color" textAlignment="CENTER">

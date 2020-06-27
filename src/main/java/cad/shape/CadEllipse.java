@@ -32,6 +32,13 @@ public class CadEllipse extends Ellipse {
                 event.consume();
                 System.out.println("consumed");
             }
+            else {
+                if(Status.paintMode == PaintMode.CadFiller){
+                    setFill(Status.fillColor);
+                    System.out.println("consumed");
+                    event.consume();
+                }
+            }
         });
         setStroke(Status.strokeColor);
         setFill(Status.fillColor);
