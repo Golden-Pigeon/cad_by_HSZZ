@@ -216,14 +216,13 @@ public class Controller implements Initializable {
     }
 
     public void onSaveMenuItemAction(ActionEvent actionEvent) {
-        /*
         WritableImage image = mainPane.snapshot(new SnapshotParameters(), null);
         try {
-            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", new File("666.png"));
-        } catch (IOException ex) {
-
+            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png",
+                    new File(parentDir, child.replace(".hszz", ".png")));
+        } catch (IOException e) {
+            FileImportExport.showIOExceptionAlert();
         }
-        */
         if (!FileImportExport.exportToFile(record, new File(parentDir, child))) {
             System.err.println("save failed");
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -234,6 +233,7 @@ public class Controller implements Initializable {
         }
     }
 
+    @FXML
     public void onSaveAsMenuItemAction(ActionEvent actionEvent) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("保存到...");
@@ -306,10 +306,12 @@ public class Controller implements Initializable {
         });
     }
 
+    @FXML
     public void onExitMenuItemAction(ActionEvent actionEvent) {
         Platform.exit();
     }
 
+    @FXML
     public void onRedoMenuItemAction(ActionEvent actionEvent) {
 /*
         List<CadShape> actionList = record.getActionList();
