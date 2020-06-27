@@ -10,7 +10,7 @@ public class CommonPath {
     /**
      * 默认存档路径
      */
-    public static final String DEFAULT_SAVE_DIR = "/saved_canvas/";
+    public static final String DEFAULT_SAVE_DIR = "./saved_canvas/";
 
     /**
      * 图标

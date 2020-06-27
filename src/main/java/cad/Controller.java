@@ -184,7 +184,10 @@ public class Controller implements Initializable {
         record = new Record();
         parentDir = new File(CommonPath.DEFAULT_SAVE_DIR);
         Date date = new Date();
-        child = date.toString() + ".hszz";
+        //TODO Optimize save file name format like JavaFX_CAD_YY_MM_DD_HR_MIN_SEC.hszz
+        //在文件名中, 冒号":"是不被允许的, 需要替换掉
+        //否则会报错
+        child = date.toString().replace(' ', '_').replace(':', '_') + ".hszz";
         statusBar = new CadStatusBar().getCadStatusBar();
         borderPane.setBottom(statusBar);
     }
@@ -211,7 +214,7 @@ public class Controller implements Initializable {
     }
 
     public void onSaveMenuItemAction(ActionEvent actionEvent) {
-        if (!FileImportExport.exportToFile(record, new File("save.save"))) {
+        if (!FileImportExport.exportToFile(record, new File(parentDir, child))) {
             System.err.println("save failed");
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("警告");
