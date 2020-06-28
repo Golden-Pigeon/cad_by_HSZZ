@@ -11,13 +11,13 @@ public class CadText extends Text {
 
     public CadText(CadPoint startPoint, CadShape cadShape, Pane parent, Record record) {
         this(startPoint.getX(), startPoint.getY(), cadShape.textContent, cadShape, parent, record);
-        this.setStrokeWidth(cadShape.getLineWidth());
+        this.setFont(Font.font(Status.fontType, cadShape.lineWidth));
         this.setStroke(cadShape.lineColor);
     }
 
     public CadText(double startX, double startY, String context, CadShape shape, Pane parent, Record record){
         super(startX, startY, context);
-        setFont(Font.font(Status.fontType, Status.lineWidth));
+        setFont(Font.font(Status.fontType, Status.lineWidth + 13));
         setStroke(Status.strokeColor);
         setId(String.valueOf(shape.getId()));
         setOnMouseClicked(event -> {

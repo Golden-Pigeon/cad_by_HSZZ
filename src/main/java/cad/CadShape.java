@@ -24,7 +24,7 @@ public class CadShape {
         return lineWidth;
     }
 
-    double lineWidth = 8; // 默认线宽
+    public double lineWidth = 8; // 默认线宽
 
     private static int idCnt = 1;//总id计数器
     private int id = idCnt++; // 当前图形的ID

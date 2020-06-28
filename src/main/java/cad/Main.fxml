@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
@@ -9,7 +8,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane fx:id="borderPane" prefHeight="692.0" prefWidth="1051.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.cad.Controller">
+<BorderPane fx:id="borderPane" prefHeight="692.0" prefWidth="1051.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.cad.Controller">
    <center>
    <AnchorPane fx:id="mainPane" onMouseClicked="#onMainPaneMouseClicked" onMouseDragged="#onMainPaneMouseDragged" onMouseMoved="#onMouseMovedInMainPane" onMousePressed="#onMainPaneMousePressed" onMouseReleased="#onMainPaneMouseReleased" BorderPane.alignment="CENTER" />
    </center>
@@ -45,16 +44,25 @@
        </Menu>
        <Menu mnemonicParsing="false" text="编辑">
          <items>
-           <MenuItem mnemonicParsing="false" onAction="#onUndoMenuItemAction" text="撤回" />
-               <MenuItem mnemonicParsing="false" onAction="#onRedoMenuItemAction" text="重做" />
+           <MenuItem mnemonicParsing="false" onAction="#onUndoMenuItemAction" text="撤回">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="Z" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
+                     </accelerator></MenuItem>
+               <MenuItem mnemonicParsing="false" onAction="#onRedoMenuItemAction" text="重做">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="Z" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+                     </accelerator></MenuItem>
                <SeparatorMenuItem mnemonicParsing="false" />
-               <MenuItem mnemonicParsing="false" onAction="#onDeleteMenuItemAction" text="删除" />
+               <MenuItem mnemonicParsing="false" onAction="#onDeleteMenuItemAction" text="删除">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="DELETE" control="UP" meta="UP" shift="UP" shortcut="ANY" />
+                     </accelerator></MenuItem>
                <MenuItem mnemonicParsing="false" onAction="#onSelectAllMenuItemAction" text="全选">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="A" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
                      </accelerator></MenuItem>
                <SeparatorMenuItem mnemonicParsing="false" />
-               <MenuItem mnemonicParsing="false" onAction="#onListRecordMenuItemAction" text="List Record" />
+               <MenuItem disable="true" mnemonicParsing="false" onAction="#onListRecordMenuItemAction" text="List Record" />
          </items>
        </Menu>
          <Menu mnemonicParsing="false" text="工具">
@@ -71,7 +79,10 @@
          </Menu>
          <Menu mnemonicParsing="false" text="窗口">
            <items>
-             <MenuItem mnemonicParsing="false" onAction="#onNewWindowMenuItemAction" text="新窗口" />
+             <MenuItem mnemonicParsing="false" onAction="#onNewWindowMenuItemAction" text="新窗口">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="N" control="UP" meta="UP" shift="DOWN" shortcut="DOWN" />
+                     </accelerator></MenuItem>
            </items>
          </Menu>
        <Menu mnemonicParsing="false" text="关于">
@@ -81,7 +92,6 @@
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="F1" control="UP" meta="UP" shift="UP" shortcut="ANY" />
                      </accelerator></MenuItem>
-           <MenuItem mnemonicParsing="false" onAction="#onAboutMenuItemAction" text="About" />
          </items>
        </Menu>
      </menus>
@@ -208,7 +218,7 @@
                </TilePane>
                <ColorPicker fx:id="colorPicker" onAction="#onColorPickerFinished" prefHeight="34.0" prefWidth="109.0">
                    <value>
-                       <Color blue="1.0" green="0.6344988346099854" />
+                       <Color green="0.6344988346099854" blue="1.0" />
                    </value>
                </ColorPicker>
                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="32.0" prefWidth="102.0" text="颜色" textAlignment="CENTER">

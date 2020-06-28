@@ -418,6 +418,11 @@ public class Controller implements Initializable {
     }
 
     public void onSaveMenuItemAction(ActionEvent actionEvent) {
+        File saveDir = new File(CommonPath.DEFAULT_SAVE_DIR);
+        if(!saveDir.exists()) {
+            saveDir.mkdir();
+        }
+        child = new Date().toString().replace(' ', '_').replace(':', '_') + ".hszz";
         record.getDeleteList().clear();
         Status.deleteCache.clear();
         WritableImage image = mainPane.snapshot(new SnapshotParameters(), null);
@@ -749,7 +754,7 @@ public class Controller implements Initializable {
                 Optional<String> words = dialog.showAndWait();
                 if(!words.isPresent())
                     return;
-                CadShape textShape = CadShape.getCadShape(PaintMode.CadText, new CadPoint(x, y), words.get(), Status.strokeColor, Status.lineWidth);
+                CadShape textShape = CadShape.getCadShape(PaintMode.CadText, new CadPoint(x, y), words.get(), Status.strokeColor, Status.lineWidth + 13);
                 record.getActionList().add(textShape);
                 assert textShape != null;
                 Text text = new CadText(x, y, words.get(), textShape, mainPane, record);

@@ -25,7 +25,6 @@ class FileImportExport {
         if (key < 0)
             return false;
 
-        key = 0;
         List<CadShape> actionList = record.getActionList();
         StringBuilder fileContent = new StringBuilder();
         BufferedWriter outputStream;
@@ -107,7 +106,6 @@ class FileImportExport {
         if (key < 0)
             return false;
 
-        key = 0;
         FileInputStream fileInputStream = null;
         try {
             fileInputStream = new FileInputStream(saveFile);
