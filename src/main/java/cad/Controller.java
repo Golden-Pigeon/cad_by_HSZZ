@@ -22,15 +22,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import main.java.cad.CommonDefinitions.CommonPath;
 import main.java.cad.MainCadStageParts.CadStatusBar;
-import main.java.cad.shape.CadCircle;
-import main.java.cad.shape.CadEllipse;
-import main.java.cad.shape.CadLine;
-import main.java.cad.shape.CadRect;
+import main.java.cad.shape.*;
 import main.java.cad.util.CadMath;
 
 import javax.imageio.ImageIO;
@@ -196,10 +195,10 @@ public class Controller implements Initializable {
     public void onColorPickerFinished(ActionEvent actionEvent) {
         if (typeComboBox.getValue().equals("stroke")) {
             Status.strokeColor = colorPicker.getValue();
-            System.out.println("stroke");
+            System.out.println("轮廓");
         } else {
             Status.fillColor = colorPicker.getValue();
-            System.out.println("fill");
+            System.out.println("填充");
         }
         System.out.println(colorPicker.toString());
     }
@@ -231,8 +230,8 @@ public class Controller implements Initializable {
 
     public void onTypeComboBoxClicked(MouseEvent event) {
         List<String> typeOptions = new ArrayList<>();
-        typeOptions.add("stroke");
-        typeOptions.add("fill");
+        typeOptions.add("轮廓");
+        typeOptions.add("填充");
         ObservableList<String> options = FXCollections.observableArrayList(typeOptions);
         typeComboBox.setItems(options);
         typeComboBox.setEditable(false);
@@ -247,11 +246,15 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        mainPane.setVisible(false);
+        borderPane.setBackground(new Background(new BackgroundFill(Color.web("#aaaaaa"), null, null)));
+        painterToolBar.setVisible(false);
+        colorToolBar.setVisible(false);
         Status.mainPane = mainPane;
         record = new Record();
         parentDir = new File(CommonPath.DEFAULT_SAVE_DIR);
         Date date = new Date();
-        typeComboBox.setValue("stroke");
+        typeComboBox.setValue("轮廓");
         //TODO Optimize save file name format like JavaFX_CAD_YY_MM_DD_HR_MIN_SEC.hszz
         //在文件名中, 冒号":"是不被允许的, 需要替换掉
         //否则会报错
@@ -266,13 +269,64 @@ public class Controller implements Initializable {
                 + String.format("%.1f, %.1fpx ", mouseEvent.getX(), mouseEvent.getY()));
         mouseX = mouseEvent.getX();
         mouseY = mouseEvent.getY();
+        if(Status.startPoint != null){
+            double startX = Status.startPoint.getX();
+            double startY = Status.startPoint.getY();
+            double endX = mouseEvent.getX();
+            double endY = mouseEvent.getY();
+            switch (Status.paintMode){
+                case CadLine:
+                    if(Status.lastShape != null)
+                        mainPane.getChildren().remove(Status.lastShape);
+                    Status.lastShape = new Line(startX, startY, endX, endY);
+                    mainPane.getChildren().add(Status.lastShape);
+                    Status.lastShape.setStroke(Status.strokeColor);
+                    break;
+                case CadCircle:
+                    if(Status.lastShape != null)
+                        mainPane.getChildren().remove(Status.lastShape);
+                    Status.lastShape = new Circle(startX, startY, Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2)));
+                    mainPane.getChildren().add(Status.lastShape);
+                    Status.lastShape.setStroke(Status.strokeColor);
+                    Status.lastShape.setFill(Color.TRANSPARENT);
+                    break;
+                case CadRectangle:
+                case CadRectangle_RoundCorner:
+                    if(Status.lastShape != null)
+                        mainPane.getChildren().remove(Status.lastShape);
+                    Status.lastShape = new Rectangle(Math.min(startX, endX), Math.min(startY, endY),
+                            Math.abs(endX - startX), Math.abs(endY - startY));
+                    mainPane.getChildren().add(Status.lastShape);
+                    Status.lastShape.setStroke(Status.strokeColor);
+                    Status.lastShape.setFill(Color.TRANSPARENT);
+                    break;
+                case CadOval:
+                    if(Status.lastShape != null)
+                        mainPane.getChildren().remove(Status.lastShape);
+                    Status.lastShape = new Ellipse((startX + endX) / 2, (startY + endY) / 2,
+                            Math.abs((endX - startX) / 2), Math.abs((endY - startY) / 2));
+                    mainPane.getChildren().add(Status.lastShape);
+                    Status.lastShape.setStroke(Status.strokeColor);
+                    Status.lastShape.setFill(Color.TRANSPARENT);
+                    break;
+
+
+            }
+        }
     }
 
     public void onNewMenuItemAction(ActionEvent actionEvent) {
-        //TODO: call a msgBox to set dir
+        borderPane.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
+        mainPane.setVisible(true);
+        painterToolBar.setVisible(true);
+        colorToolBar.setVisible(true);
+        colorToolBarMenuItem.setSelected(true);
+        painterToolBarMenuItem.setSelected(true);
     }
 
     public void onOpenMenuItemAction(ActionEvent actionEvent) {
+
+        record = new Record();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("请选择要导入的工作环境...");
         fileChooser.setInitialDirectory(new File(CommonPath.DEFAULT_SAVE_DIR));
@@ -292,6 +346,12 @@ public class Controller implements Initializable {
             alert.showAndWait();
             return;
         }
+        borderPane.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
+        mainPane.setVisible(true);
+        painterToolBar.setVisible(true);
+        colorToolBar.setVisible(true);
+        colorToolBarMenuItem.setSelected(true);
+        painterToolBarMenuItem.setSelected(true);
         for (CadShape currShape : record.getActionList()) {
             if (currShape.type.equals(PaintMode.CadLine)) {
                 Line newLine = new CadLine(currShape.startPoint, currShape.endPoint, currShape, mainPane, record);
@@ -329,15 +389,34 @@ public class Controller implements Initializable {
     }
 
     public void onCloseMenuItemAction(ActionEvent actionEvent) {
-        //TODO: save or not
+        Status.deleteCache.clear();
+        if (!Status.saved) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("关闭画布");
+            alert.setHeaderText("确定要关闭吗");
+            alert.setContentText("画布尚未保存，关闭后将失去所有未保存内容");
+            Optional<ButtonType> buttonType = alert.showAndWait();
+            if (!buttonType.get().getButtonData().equals(ButtonBar.ButtonData.OK_DONE)) {
+                actionEvent.consume();
+                return;
+            }
+
+        }
+        record = new Record();
         mainPane.setVisible(false);
+        borderPane.setBackground(new Background(new BackgroundFill(Color.web("#aaaaaa"), null, null)));
+        painterToolBar.setVisible(false);
+        colorToolBar.setVisible(false);
     }
 
     public void onSaveMenuItemAction(ActionEvent actionEvent) {
+        record.getDeleteList().clear();
+        Status.deleteCache.clear();
         WritableImage image = mainPane.snapshot(new SnapshotParameters(), null);
         try {
             ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png",
                     new File(parentDir, child.replace(".hszz", ".png")));
+            Status.saved = true;
         } catch (IOException e) {
             FileImportExport.showIOExceptionAlert();
         }
@@ -353,6 +432,8 @@ public class Controller implements Initializable {
 
     @FXML
     public void onSaveAsMenuItemAction(ActionEvent actionEvent) {
+        record.getDeleteList().clear();
+        Status.deleteCache.clear();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("保存到...");
         fileChooser.setInitialDirectory(new File("."));
@@ -377,6 +458,7 @@ public class Controller implements Initializable {
             alert.setTitle("保存成功");
             alert.setHeaderText("成功保存至 " + saving.getName());
             alert.showAndWait();
+            Status.saved = true;
             return;
         } else if (!FileImportExport.exportToFile(record, 0, saving)) {
             System.err.println("save failed");
@@ -391,14 +473,18 @@ public class Controller implements Initializable {
         alert.setTitle("保存成功");
         alert.setHeaderText("成功保存至" + saving.getName());
         alert.showAndWait();
+        Status.saved = true;
     }
 
     public void onRefreshMenuItemAction(ActionEvent actionEvent) {
-        //TODO: paint graphs from record again
+        record.getDeleteList().clear();
+        Status.deleteCache.clear();
     }
 
     @FXML
     public void onRestartMenuItemAction(ActionEvent actionEvent) {
+        record.getDeleteList().clear();
+        Status.deleteCache.clear();
         if (!Status.saved) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("重启程序");
@@ -424,62 +510,104 @@ public class Controller implements Initializable {
 
     @FXML
     public void onExitMenuItemAction(ActionEvent actionEvent) {
+        if(!Status.saved){
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("退出程序");
+            alert.setHeaderText("确定要关闭吗");
+            alert.setContentText("画布尚未保存，退出后将失去所有未保存内容");
+            Optional<ButtonType> buttonType = alert.showAndWait();
+            if (!buttonType.get().getButtonData().equals(ButtonBar.ButtonData.OK_DONE)) {
+                actionEvent.consume();
+                return;
+            }
+
+        }
         Platform.exit();
     }
 
     @FXML
-    public void onRedoMenuItemAction(ActionEvent actionEvent) {
+    public void onUndoMenuItemAction(ActionEvent actionEvent) {
 
         List<CadShape> actionList = record.getActionList();
         List<CadShape> deleteList = record.getDeleteList();
         String id;
         CadShape shape;
-
-        if (actionList instanceof LinkedList){
-            shape = ((LinkedList<CadShape>) actionList).getLast();
-        }
-        else {
-            shape = deleteList.get(actionList.size() - 1);
-        }
-        Iterator<Node> ite = mainPane.getChildren().iterator();
-        id = String.valueOf(shape.getId());
-//                    System.out.println("line " + id);
-        while (ite.hasNext()) {
-            Node n = ite.next();
-            String item = n.getId();
-//                        System.out.println("item " + item);
-            if (n instanceof Shape && item.equals(id)) {
-//                            System.out.println("removed");
-                Status.deleteCache.add((Shape)n);
-                ite.remove();
+        if(!actionList.isEmpty()) {
+            if (actionList instanceof LinkedList) {
+                shape = ((LinkedList<CadShape>) actionList).getLast();
+            } else {
+                shape = actionList.get(actionList.size() - 1);
             }
-        }
+            Iterator<Node> ite = mainPane.getChildren().iterator();
+            id = String.valueOf(shape.getId());
+//                    System.out.println("line " + id);
+            while (ite.hasNext()) {
+                Node n = ite.next();
+                String item = n.getId();
+//                        System.out.println("item " + item);
+                if (n instanceof Shape && item.equals(id)) {
+//                            System.out.println("removed");
+                    Status.deleteCache.add((Shape) n);
+                    ite.remove();
+                }
+            }
 //        id = String.valueOf(shape.getId());
 //        Node n = mainPane.lookup(id);
 //        if(n != null){
 //            mainPane.getChildren().remove(n);
-        actionList.remove(shape);
-        deleteList.add(shape);
+            actionList.remove(shape);
+            deleteList.add(shape);
 //        }
 
-
+        }
     }
 
-    public void onUndoMenuItemAction(ActionEvent actionEvent) {
-    }
-
-    public void onCutMenuItemAction(ActionEvent actionEvent) {
-
-    }
-
-    public void onCopyMenuItemAction(ActionEvent actionEvent) {
-    }
-
-    public void onPasteMenuItemAction(ActionEvent actionEvent) {
+    public void onRedoMenuItemAction(ActionEvent actionEvent) {
+        List<CadShape> actionList = record.getActionList();
+        List<CadShape> deleteList = record.getDeleteList();
+        String id;
+        CadShape shape;
+        if(!deleteList.isEmpty()){
+            if (deleteList instanceof LinkedList) {
+                shape = ((LinkedList<CadShape>) deleteList).getLast();
+            } else {
+                shape = deleteList.get(deleteList.size() - 1);
+            }
+            ListIterator<Shape> ite = Status.deleteCache.listIterator();
+            while (ite.hasNext()){
+                Shape s = ite.next();
+                if(s.getId().equals(String.valueOf(shape.getId()))){
+                    mainPane.getChildren().add(s);
+                    ite.remove();
+                }
+            }
+            actionList.add(shape);
+            deleteList.remove(shape);
+        }
     }
 
     public void onDeleteMenuItemAction(ActionEvent actionEvent) {
-
+        if(Status.selectAll) {
+            mainPane.getChildren().clear();
+            Status.selected = null;
+            Status.selectAll = false;
+        }
+        if(Status.selected != null){
+            Iterator<Node> ite = mainPane.getChildren().iterator();
+            String id = String.valueOf(Status.selected.getId());
+//                    System.out.println("line " + id);
+            while (ite.hasNext()) {
+                Node n = ite.next();
+                String item = n.getId();
+//                        System.out.println("item " + item);
+                if (n instanceof Shape && item.equals(id)) {
+//                            System.out.println("removed");
+                    ite.remove();
+                }
+            }
+            record.getActionList().remove(Status.selected);
+            Status.selected = null;
+        }
     }
 
     public void onSelectAllMenuItemAction(ActionEvent actionEvent) {
@@ -488,10 +616,7 @@ public class Controller implements Initializable {
             if (node instanceof Shape) ((Shape) node).setStroke(Color.RED);
         });
     }
-
-    public void onFindMenuItemAction(ActionEvent actionEvent) {
-    }
-
+    //TODO: list record
     public void onListRecordMenuItemAction(ActionEvent actionEvent) {
 
     }
@@ -504,9 +629,6 @@ public class Controller implements Initializable {
                 e.printStackTrace();
             }
         });
-    }
-
-    public void onHelpMenuItemAction(ActionEvent actionEvent) {
     }
 
     @FXML
@@ -575,7 +697,7 @@ public class Controller implements Initializable {
     }
 
     public void onMainPaneMouseClicked(MouseEvent mouseEvent) {
-        if (Status.selected != null) {
+        if (!Status.paintMode.equals(PaintMode.CadCurve) && Status.selected != null) {
             Shape shape = ((Shape) mainPane.lookup("#" + Status.selected.getId()));
             shape.setStroke(Status.strokeColor);
             //System.out.println(Status.strokeColor);
@@ -592,11 +714,31 @@ public class Controller implements Initializable {
         double y = mouseEvent.getY();
         switch (Status.paintMode) {
             case CadText:
-                //TODO: Enter Texts
+                Status.saved = false;
+                TextInputDialog dialog = new TextInputDialog();
+                dialog.setTitle("插入");
+                dialog.setHeaderText("插入文字");
+                dialog.setContentText("键入想插入的文字");
+                Optional<String> words = dialog.showAndWait();
+                if(!words.isPresent())
+                    return;
+                CadShape textShape = CadShape.getCadShape(PaintMode.CadText, new CadPoint(x, y), words.get(), Status.strokeColor, Status.lineWidth);
+                assert textShape != null;
+                Text text = new CadText(x, y, words.get(), textShape, mainPane, record);
+                mainPane.getChildren().add(text);
+
+                break;
             case CadLine:
+                Status.saved = false;
+                Status.deleteCache.clear();
+                record.getDeleteList().clear();
                 if (Status.startPoint == null) {
                     Status.startPoint = new CadPoint(x, y);
                 } else {
+                    if(Status.lastShape != null){
+                        mainPane.getChildren().remove(Status.lastShape);
+                        Status.lastShape = null;
+                    }
                     double sx = Status.startPoint.getX();
                     double sy = Status.startPoint.getY();
                     CadShape shape = CadShape.getCadShape(PaintMode.CadLine, Status.startPoint, new CadPoint(x, y), Status.strokeColor, Status.fillColor, Status.lineWidth);
@@ -608,9 +750,16 @@ public class Controller implements Initializable {
                 break;
 
             case CadRectangle:
+                Status.saved = false;
+                Status.deleteCache.clear();
+                record.getDeleteList().clear();
                 if (Status.startPoint == null) {
                     Status.startPoint = new CadPoint(x, y);
                 } else {
+                    if(Status.lastShape != null){
+                        mainPane.getChildren().remove(Status.lastShape);
+                        Status.lastShape = null;
+                    }
                     double sx = Status.startPoint.getX();
                     double sy = Status.startPoint.getY();
                     CadShape shape = CadShape.getCadShape(PaintMode.CadRectangle, Status.startPoint, new CadPoint(x, y), Status.strokeColor, Status.fillColor, Status.lineWidth);
@@ -622,9 +771,16 @@ public class Controller implements Initializable {
                 break;
 
             case CadOval:
+                Status.saved = false;
+                Status.deleteCache.clear();
+                record.getDeleteList().clear();
                 if (Status.startPoint == null) {
                     Status.startPoint = new CadPoint(x, y);
                 } else {
+                    if(Status.lastShape != null){
+                        mainPane.getChildren().remove(Status.lastShape);
+                        Status.lastShape = null;
+                    }
                     double sx = Status.startPoint.getX();
                     double sy = Status.startPoint.getY();
                     CadShape shape = CadShape.getCadShape(PaintMode.CadOval, Status.startPoint, new CadPoint(x, y), Status.strokeColor, Status.fillColor, Status.lineWidth);
@@ -635,9 +791,16 @@ public class Controller implements Initializable {
                 }
                 break;
             case CadRectangle_RoundCorner:
+                Status.saved = false;
+                Status.deleteCache.clear();
+                record.getDeleteList().clear();
                 if (Status.startPoint == null) {
                     Status.startPoint = new CadPoint(x, y);
                 } else {
+                    if(Status.lastShape != null){
+                        mainPane.getChildren().remove(Status.lastShape);
+                        Status.lastShape = null;
+                    }
                     double sx = Status.startPoint.getX();
                     double sy = Status.startPoint.getY();
                     CadShape shape = CadShape.getCadShape(PaintMode.CadRectangle_RoundCorner, Status.startPoint, new CadPoint(x, y), Status.strokeColor, Status.fillColor, Status.lineWidth);
@@ -650,9 +813,16 @@ public class Controller implements Initializable {
                 }
                 break;
             case CadCircle:
+                Status.saved = false;
+                Status.deleteCache.clear();
+                record.getDeleteList().clear();
                 if (Status.startPoint == null) {
                     Status.startPoint = new CadPoint(x, y);
                 } else {
+                    if(Status.lastShape != null){
+                        mainPane.getChildren().remove(Status.lastShape);
+                        Status.lastShape = null;
+                    }
                     double sx = Status.startPoint.getX();
                     double sy = Status.startPoint.getY();
                     CadShape shape = CadShape.getCadShape(PaintMode.CadCircle, Status.startPoint, new CadPoint(x, y), Status.strokeColor, Status.fillColor, Status.lineWidth);
@@ -668,6 +838,7 @@ public class Controller implements Initializable {
 
     public void onMainPaneMousePressed(MouseEvent event) {
         if (Status.paintMode == PaintMode.CadCurve) {
+            Status.saved = false;
             Status.penDrawable = true;
             if (Status.points == null) {
                 Status.points = new ArrayList<>();

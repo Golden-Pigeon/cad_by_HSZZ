@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
@@ -8,112 +9,74 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane fx:id="borderPane" prefHeight="692.0" prefWidth="1051.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.cad.Controller">
+<BorderPane fx:id="borderPane" prefHeight="692.0" prefWidth="1051.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.cad.Controller">
    <center>
    <AnchorPane fx:id="mainPane" onMouseClicked="#onMainPaneMouseClicked" onMouseDragged="#onMainPaneMouseDragged" onMouseMoved="#onMouseMovedInMainPane" onMousePressed="#onMainPaneMousePressed" onMouseReleased="#onMainPaneMouseReleased" BorderPane.alignment="CENTER" />
    </center>
    <top>
    <MenuBar prefHeight="32.0" prefWidth="1051.0" BorderPane.alignment="CENTER">
      <menus>
-       <Menu mnemonicParsing="false" text="File">
+       <Menu mnemonicParsing="false" text="文件">
          <items>
-           <MenuItem mnemonicParsing="false" onAction="#onNewMenuItemAction" text="New">
+           <MenuItem mnemonicParsing="false" onAction="#onNewMenuItemAction" text="新建">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="N" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
                      </accelerator></MenuItem>
-               <MenuItem mnemonicParsing="false" onAction="#onOpenMenuItemAction" text="Open">
+               <MenuItem mnemonicParsing="false" onAction="#onOpenMenuItemAction" text="打开">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="O" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
                      </accelerator></MenuItem>
                <SeparatorMenuItem mnemonicParsing="false" />
-               <MenuItem mnemonicParsing="false" onAction="#onCloseMenuItemAction" text="Close" />
-               <MenuItem mnemonicParsing="false" text="Close All" />
+               <MenuItem mnemonicParsing="false" onAction="#onCloseMenuItemAction" text="关闭" />
                <SeparatorMenuItem mnemonicParsing="false" />
-               <MenuItem mnemonicParsing="false" onAction="#onSaveMenuItemAction" text="Save">
+               <MenuItem mnemonicParsing="false" onAction="#onSaveMenuItemAction" text="保存">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="S" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
                      </accelerator></MenuItem>
-               <MenuItem mnemonicParsing="false" onAction="#onSaveAsMenuItemAction" text="Save As" />
-               <MenuItem mnemonicParsing="false" text="Save All" />
+               <MenuItem mnemonicParsing="false" onAction="#onSaveAsMenuItemAction" text="另存为" />
                <SeparatorMenuItem mnemonicParsing="false" />
-               <MenuItem mnemonicParsing="false" onAction="#onRefreshMenuItemAction" text="Refresh" />
-               <MenuItem mnemonicParsing="false" onAction="#onRestartMenuItemAction" text="Restart">
+               <MenuItem mnemonicParsing="false" onAction="#onRefreshMenuItemAction" text="刷新" />
+               <MenuItem mnemonicParsing="false" onAction="#onRestartMenuItemAction" text="重启">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="R" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                      </accelerator></MenuItem>
-               <MenuItem mnemonicParsing="false" onAction="#onExitMenuItemAction" text="Exit" />
+               <MenuItem mnemonicParsing="false" onAction="#onExitMenuItemAction" text="退出" />
          </items>
        </Menu>
-       <Menu mnemonicParsing="false" text="Edit">
+       <Menu mnemonicParsing="false" text="编辑">
          <items>
-           <MenuItem mnemonicParsing="false" onAction="#onUndoMenuItemAction" text="Undo" />
-               <MenuItem mnemonicParsing="false" onAction="#onRedoMenuItemAction" text="Redo" />
+           <MenuItem mnemonicParsing="false" onAction="#onUndoMenuItemAction" text="撤回" />
+               <MenuItem mnemonicParsing="false" onAction="#onRedoMenuItemAction" text="重做" />
                <SeparatorMenuItem mnemonicParsing="false" />
-               <MenuItem mnemonicParsing="false" onAction="#onCutMenuItemAction" text="Cut">
-                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="X" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
-                     </accelerator></MenuItem>
-               <MenuItem mnemonicParsing="false" onAction="#onCopyMenuItemAction" text="Copy">
-                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="C" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
-                     </accelerator></MenuItem>
-               <MenuItem mnemonicParsing="false" onAction="#onPasteMenuItemAction" text="Paste">
-                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="V" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
-                     </accelerator></MenuItem>
-               <SeparatorMenuItem mnemonicParsing="false" />
-               <MenuItem mnemonicParsing="false" onAction="#onDeleteMenuItemAction" text="Delete" />
-               <MenuItem mnemonicParsing="false" onAction="#onSelectAllMenuItemAction" text="Select All">
+               <MenuItem mnemonicParsing="false" onAction="#onDeleteMenuItemAction" text="删除" />
+               <MenuItem mnemonicParsing="false" onAction="#onSelectAllMenuItemAction" text="全选">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="A" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
                      </accelerator></MenuItem>
                <SeparatorMenuItem mnemonicParsing="false" />
-               <MenuItem mnemonicParsing="false" onAction="#onFindMenuItemAction" text="Find">
-                     <accelerator>
-                        <KeyCodeCombination alt="UP" code="F" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
-                     </accelerator></MenuItem>
                <MenuItem mnemonicParsing="false" onAction="#onListRecordMenuItemAction" text="List Record" />
          </items>
        </Menu>
-         <Menu mnemonicParsing="false" text="Tools">
+         <Menu mnemonicParsing="false" text="工具">
            <items>
-               <CheckMenuItem fx:id="painterToolBarMenuItem" mnemonicParsing="false" onAction="#onPainterToolMenuItemAction" selected="true" text="Painter Tool">
+               <CheckMenuItem fx:id="painterToolBarMenuItem" mnemonicParsing="false" onAction="#onPainterToolMenuItemAction" text="绘图工具">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="P" control="UP" meta="UP" shift="DOWN" shortcut="DOWN" />
                      </accelerator></CheckMenuItem>
-               <CheckMenuItem fx:id="colorToolBarMenuItem" mnemonicParsing="false" onAction="#onColorToolMenuItemAction" selected="true" text="Color Tool">
+               <CheckMenuItem fx:id="colorToolBarMenuItem" mnemonicParsing="false" onAction="#onColorToolMenuItemAction" text="颜色工具">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="C" control="UP" meta="UP" shift="DOWN" shortcut="DOWN" />
                      </accelerator></CheckMenuItem>
            </items>
          </Menu>
-         <Menu mnemonicParsing="false" text="Window">
+         <Menu mnemonicParsing="false" text="窗口">
            <items>
-             <MenuItem mnemonicParsing="false" onAction="#onNewWindowMenuItemAction" text="New Window" />
-               <MenuItem mnemonicParsing="false" text="Preference" />
+             <MenuItem mnemonicParsing="false" onAction="#onNewWindowMenuItemAction" text="新窗口" />
            </items>
          </Menu>
-         <Menu mnemonicParsing="false" text="Server">
-           <items>
-             <MenuItem mnemonicParsing="false" text="Connect" />
-               <MenuItem mnemonicParsing="false" text="Group" />
-               <MenuItem mnemonicParsing="false" text="Customize Account" />
-               <MenuItem mnemonicParsing="false" text="Upload Workspace" />
-               <MenuItem mnemonicParsing="false" text="Download Workspace" />
-               <MenuItem mnemonicParsing="false" text="Disconnect" />
-           </items>
-         </Menu>
-         <Menu mnemonicParsing="false" text="Coop">
-           <items>
-             <MenuItem mnemonicParsing="false" text="Chat Box" />
-               <MenuItem mnemonicParsing="false" text="Status Box" />
-               <MenuItem mnemonicParsing="false" text="History" />
-           </items>
-         </Menu>
-       <Menu mnemonicParsing="false" text="Help">
+       <Menu mnemonicParsing="false" text="关于">
          <items>
-               <MenuItem mnemonicParsing="false" onAction="#onHelpMenuItemAction" text="Help" />
-           <MenuItem mnemonicParsing="false" onAction="#onAboutMenuItemAction" text="About" />
+           <MenuItem mnemonicParsing="false" onAction="#onAboutMenuItemAction" text="关于" />
          </items>
        </Menu>
      </menus>
@@ -203,9 +166,9 @@
                        <Insets bottom="8.0" top="10.0" />
                    </padding>
                </TilePane>
-               <ComboBox fx:id="sizeComboBox" onAction="#onSizeComboBoxFinished" onMouseClicked="#onSizeComboBoxClicked" prefWidth="150.0" promptText="Size" />
+               <ComboBox fx:id="sizeComboBox" onAction="#onSizeComboBoxFinished" onMouseClicked="#onSizeComboBoxClicked" prefWidth="150.0" promptText="线宽" />
                <Slider fx:id="sizeSlider" blockIncrement="2.0" majorTickUnit="2.0" max="20.0" min="2.0" minorTickCount="0" onMouseReleased="#onSizeSliderFinished" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="2.0" />
-               <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="75.0" text="Tools" textAlignment="CENTER">
+               <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="75.0" text="绘图工具" textAlignment="CENTER">
                    <font>
                        <Font name="System Bold" size="17.0" />
                    </font>
@@ -216,11 +179,11 @@
    <right>
        <VBox fx:id="colorToolBar" alignment="CENTER" layoutX="949.0" layoutY="181.0" prefHeight="241.0" prefWidth="102.0" style="-fx-background-color: #aaaaaa; -fx-background-radius: 5;">
            <children>
-            <Label text="Type">
+            <Label text="颜色类型">
                <font>
                   <Font name="System Bold" size="17.0" />
                </font></Label>
-            <ComboBox fx:id="typeComboBox" onMouseClicked="#onTypeComboBoxClicked" prefWidth="150.0" promptText="Type" />
+            <ComboBox fx:id="typeComboBox" onMouseClicked="#onTypeComboBoxClicked" prefWidth="150.0" promptText="颜色类型" />
                <TilePane alignment="CENTER" hgap="5.0" prefColumns="2" prefHeight="145.0" prefRows="4" prefWidth="37.0" vgap="5.0">
                    <children>
                        <Button fx:id="preset_black" mnemonicParsing="false" onAction="#onColorButtonClicked" prefHeight="30.0" prefWidth="30.0" style="-fx-base: #000000;" />
@@ -240,10 +203,10 @@
                </TilePane>
                <ColorPicker fx:id="colorPicker" onAction="#onColorPickerFinished" prefHeight="34.0" prefWidth="109.0">
                    <value>
-                       <Color green="0.6344988346099854" blue="1.0" />
+                       <Color blue="1.0" green="0.6344988346099854" />
                    </value>
                </ColorPicker>
-               <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="32.0" prefWidth="102.0" text="Color" textAlignment="CENTER">
+               <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="32.0" prefWidth="102.0" text="颜色" textAlignment="CENTER">
                    <font>
                        <Font name="System Bold" size="17.0" />
                    </font></Label>

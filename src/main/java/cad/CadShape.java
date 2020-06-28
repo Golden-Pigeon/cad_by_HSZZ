@@ -62,10 +62,11 @@ public class CadShape {
         return newShape;
     }
 
-    public static CadShape getCadShape(PaintMode type, String textContent, Color lineColor, double lineWidth) {
+    public static CadShape getCadShape(PaintMode type, CadPoint point,  String textContent, Color lineColor, double lineWidth) {
         CadShape newShape = new CadShape();
         if (type != PaintMode.CadText)
             return null;
+        newShape.startPoint = point;
         newShape.type = PaintMode.CadText;
         newShape.textContent = textContent;
         newShape.lineColor = lineColor;

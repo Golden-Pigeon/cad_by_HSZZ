@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Status {
+    public static Shape lastShape;
     public static List<Shape> deleteCache = new ArrayList<>();
     public static List<Line> tempLines;
     public static List<CadPoint> points;
