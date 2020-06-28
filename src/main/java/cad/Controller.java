@@ -122,7 +122,7 @@ public class Controller implements Initializable {
     public void onColorButtonClicked(ActionEvent actionEvent) {
         Button currButton = (Button) actionEvent.getSource();
         String name = currButton.getId();
-        if (typeComboBox.getValue().equals("stroke")) {
+        if (typeComboBox.getValue().equals("轮廓")) {
             switch (name) {
                 case "preset_black":
                     Status.strokeColor = Color.web("#000000");
@@ -156,7 +156,7 @@ public class Controller implements Initializable {
                     break;
 
             }
-            System.out.println(Status.strokeColor);
+            System.out.println("STROKE: " + Status.strokeColor);
         } else {
             switch (name) {
                 case "preset_black":
@@ -190,7 +190,7 @@ public class Controller implements Initializable {
                     Status.fillColor = Color.web("#ffff00");
                     break;
             }
-            System.out.println(Status.fillColor);
+            System.out.println("FILL: " + Status.fillColor);
         }
 
     }
@@ -378,6 +378,10 @@ public class Controller implements Initializable {
             if (currShape.type.equals(PaintMode.CadCircle)) {
                 Circle newCircle = new CadCircle(currShape.startPoint, currShape.endPoint, currShape, mainPane, record);
                 mainPane.getChildren().add(newCircle);
+            }
+            if(currShape.type.equals(PaintMode.CadText)) {
+                Text newText = new CadText(currShape.startPoint, currShape, mainPane, record);
+                mainPane.getChildren().add(newText);
             }
             if (currShape.type.equals(PaintMode.CadCurve)) {
                 for (int i = 0; i < currShape.curvePoints.size() - 1; i++) {
@@ -746,8 +750,10 @@ public class Controller implements Initializable {
                 if(!words.isPresent())
                     return;
                 CadShape textShape = CadShape.getCadShape(PaintMode.CadText, new CadPoint(x, y), words.get(), Status.strokeColor, Status.lineWidth);
+                record.getActionList().add(textShape);
                 assert textShape != null;
                 Text text = new CadText(x, y, words.get(), textShape, mainPane, record);
+                text.setStroke(Status.strokeColor);
                 mainPane.getChildren().add(text);
 
                 break;

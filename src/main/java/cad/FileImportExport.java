@@ -25,6 +25,7 @@ class FileImportExport {
         if (key < 0)
             return false;
 
+        key = 0;
         List<CadShape> actionList = record.getActionList();
         StringBuilder fileContent = new StringBuilder();
         BufferedWriter outputStream;
@@ -80,6 +81,9 @@ class FileImportExport {
                 fileContent.append(PaintMode.CadText.toString()).append("\n").append(currShape.getId())
                         .append("\n").append(currShape.lineColor.toString()).append("\n");
                 fileContent.append(currShape.lineWidth).append("\n").append(currShape.textContent).append("\n");
+                fileContent.append(currShape.startPoint.getX()).append(" ")
+                        .append(currShape.startPoint.getY()).append("\n");
+                continue;
             }
             fileContent.append(currShape.type.toString()).append("\n");
             fileContent.append(currShape.getId()).append("\n");
@@ -103,6 +107,7 @@ class FileImportExport {
         if (key < 0)
             return false;
 
+        key = 0;
         FileInputStream fileInputStream = null;
         try {
             fileInputStream = new FileInputStream(saveFile);
@@ -174,7 +179,10 @@ class FileImportExport {
                 currShapeID = Integer.parseInt(lines[++i]);
                 Color textColor = Color.web(lines[++i]);
                 lineWidth = Double.parseDouble(lines[++i]);
-                shapeList.add(CadShape.getCadShape(PaintMode.CadText, lines[++i], textColor, lineWidth));
+                String textContent = lines[++i];
+                String[] pointsArray = lines[++i].split(" ");
+                CadPoint textPoint = new CadPoint(Double.parseDouble(pointsArray[0]), Double.parseDouble(pointsArray[1]));
+                shapeList.add(CadShape.getCadShape(PaintMode.CadText, textPoint, textContent, textColor, lineWidth));
                 shapeList.get(shapeList.size() - 1).setId(currShapeID);
                 continue;
             }

@@ -5,12 +5,16 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import main.java.cad.CadShape;
-import main.java.cad.PaintMode;
-import main.java.cad.Record;
-import main.java.cad.Status;
+import main.java.cad.*;
 
 public class CadText extends Text {
+
+    public CadText(CadPoint startPoint, CadShape cadShape, Pane parent, Record record) {
+        this(startPoint.getX(), startPoint.getY(), cadShape.textContent, cadShape, parent, record);
+        this.setStrokeWidth(cadShape.getLineWidth());
+        this.setStroke(cadShape.lineColor);
+    }
+
     public CadText(double startX, double startY, String context, CadShape shape, Pane parent, Record record){
         super(startX, startY, context);
         setFont(Font.font(Status.fontType, Status.lineWidth));

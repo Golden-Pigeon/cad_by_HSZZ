@@ -18,7 +18,7 @@ public class CadShape {
     public Color lineColor = Color.BLACK;// 边线颜色
     public Color fillColor = Color.TRANSPARENT;// 填充颜色, 默认透明
     List<CadPoint> curvePoints; //自定义曲线的采样点
-    String textContent; //文本"图形的内容"
+    public String textContent; //文本"图形的内容"
 
     public double getLineWidth() {
         return lineWidth;

@@ -2,7 +2,7 @@ package main.java.cad.CommonDefinitions;
 
 public class CommonPath {
 
-    public static final String version = "0.2.0";
+    public static final String version = "0.9.1";
 
     public static final String gitHubLink = "https://github.com/Golden-Pigeon/cad_by_HSZZ";
 
