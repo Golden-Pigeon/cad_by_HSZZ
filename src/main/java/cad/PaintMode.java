@@ -17,25 +17,25 @@ public enum PaintMode {
 
     public static PaintMode getPaintModeByName(String name) {
         name = name.toLowerCase();
-        if(name.equals("cadline"))
+        if (name.equals("cadline"))
             return PaintMode.CadLine;
-        if(name.equals("cadcircle"))
+        if (name.equals("cadcircle"))
             return PaintMode.CadCircle;
-        if(name.equals("cadrectangle"))
+        if (name.equals("cadrectangle"))
             return PaintMode.CadRectangle;
-        if(name.equals("cadrectangle_roundcorner"))
+        if (name.equals("cadrectangle_roundcorner"))
             return PaintMode.CadRectangle_RoundCorner;
-        if(name.equals("cadoval"))
+        if (name.equals("cadoval"))
             return PaintMode.CadOval;
-        if(name.equals("cadcurve"))
+        if (name.equals("cadcurve"))
             return PaintMode.CadCurve;
-        if(name.equals("cadtext"))
+        if (name.equals("cadtext"))
             return PaintMode.CadText;
-        if(name.equals("caderaser"))
+        if (name.equals("caderaser"))
             return PaintMode.CadEraser;
-        if(name.equals("cadcursor"))
+        if (name.equals("cadcursor"))
             return PaintMode.CadCursor;
-        if(name.equals("cadfiller"))
+        if (name.equals("cadfiller"))
             return PaintMode.CadFiller;
         return null;
     }

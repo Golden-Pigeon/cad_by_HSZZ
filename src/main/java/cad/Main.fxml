@@ -77,6 +77,11 @@
        <Menu mnemonicParsing="false" text="关于">
          <items>
            <MenuItem mnemonicParsing="false" onAction="#onAboutMenuItemAction" text="关于" />
+               <MenuItem mnemonicParsing="false" onAction="#onHelpMenuItemAction" text="帮助">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="F1" control="UP" meta="UP" shift="UP" shortcut="ANY" />
+                     </accelerator></MenuItem>
+           <MenuItem mnemonicParsing="false" onAction="#onAboutMenuItemAction" text="About" />
          </items>
        </Menu>
      </menus>
@@ -181,7 +186,7 @@
            <children>
             <Label text="颜色类型">
                <font>
-                  <Font name="System Bold" size="17.0" />
+                  <Font name="Consolas Bold" size="14.0" />
                </font></Label>
             <ComboBox fx:id="typeComboBox" onMouseClicked="#onTypeComboBoxClicked" prefWidth="150.0" promptText="颜色类型" />
                <TilePane alignment="CENTER" hgap="5.0" prefColumns="2" prefHeight="145.0" prefRows="4" prefWidth="37.0" vgap="5.0">

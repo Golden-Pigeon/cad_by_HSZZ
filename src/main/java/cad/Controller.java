@@ -29,6 +29,10 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import main.java.cad.CommonDefinitions.CommonPath;
 import main.java.cad.MainCadStageParts.CadStatusBar;
+import main.java.cad.shape.CadCircle;
+import main.java.cad.shape.CadEllipse;
+import main.java.cad.shape.CadLine;
+import main.java.cad.shape.CadRect;
 import main.java.cad.shape.*;
 import main.java.cad.util.CadMath;
 
@@ -338,7 +342,7 @@ public class Controller implements Initializable {
         File saveFile = fileChooser.showOpenDialog(mainStage);
         if (saveFile == null)
             return;
-        if (!FileImportExport.importFromFile(record, 0, saveFile)) {
+        if (!FileImportExport.importFromFile(record, saveFile)) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("导入工作空间失败");
             alert.setHeaderText("由于导入操作遇到错误, 未能从文件" + saveFile.getName() + "导入工作空间");
@@ -420,7 +424,7 @@ public class Controller implements Initializable {
         } catch (IOException e) {
             FileImportExport.showIOExceptionAlert();
         }
-        if (!FileImportExport.exportToFile(record, 0, new File(parentDir, child))) {
+        if (!FileImportExport.exportToFile(record, new File(parentDir, child))) {
             System.err.println("save failed");
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("警告");
@@ -460,7 +464,7 @@ public class Controller implements Initializable {
             alert.showAndWait();
             Status.saved = true;
             return;
-        } else if (!FileImportExport.exportToFile(record, 0, saving)) {
+        } else if (!FileImportExport.exportToFile(record, saving)) {
             System.err.println("save failed");
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("警告");
@@ -629,6 +633,25 @@ public class Controller implements Initializable {
                 e.printStackTrace();
             }
         });
+    }
+
+    public void onHelpMenuItemAction(ActionEvent actionEvent) {
+        Alert helpInfoAlert = new Alert(Alert.AlertType.INFORMATION);
+        helpInfoAlert.setTitle("帮助");
+        helpInfoAlert.initOwner(mainPane.getScene().getWindow());
+        helpInfoAlert.getDialogPane().setPrefWidth(700);
+        helpInfoAlert.getDialogPane().setMinWidth(Region.USE_PREF_SIZE);
+        helpInfoAlert.setHeaderText("关于JavaFX CAD Utility的帮助");
+        helpInfoAlert.setContentText("绘制图形:\n" +
+                "    除圆形之外的其他图形: 点击-确定起始点(或者多边形的一个顶点), 点击-确定终点(或多边形对角线上的顶点)\n" +
+                "    圆形: 点击-确定圆心, 点击-确定圆上一点\n" +
+                "    曲线: 点击并拖动-绘制曲线\n" +
+                "选择颜色:\n" +
+                "    右侧选择颜色\n    stroke-边线颜色  fill-填充颜色\n" +
+                "    在选择了如曲线这类\"实心\"的图形工具时, fill下选择的颜色将被忽略\n" +
+                "选择线条宽度:\n" +
+                "    左下的选择框与滑动块均可以选择线条宽度, 两者同步且等效");
+        helpInfoAlert.showAndWait();
     }
 
     @FXML
