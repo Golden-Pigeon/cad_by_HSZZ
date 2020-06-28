@@ -75,6 +75,7 @@ class FileImportExport {
             if (currShape.type == PaintMode.CadText) {
                 fileContent.append(PaintMode.CadText.toString() + "\n"
                         + currShape.getId() + "\n"
+
                         + currShape.lineColor.toString() + "\n");
                 fileContent.append(currShape.lineWidth + "\n" + currShape.textContent + "\n");
             }
@@ -160,12 +161,13 @@ class FileImportExport {
                 lineWidth = Double.parseDouble(lines[++i]);
                 int pointNum = Integer.parseInt(lines[++i]);
                 points = lines[++i].split(" ");
-                for (int pointCnt = 0; pointCnt < pointNum; pointCnt++) {
+                for (int pointCnt = 0; pointCnt < pointNum*2; pointCnt++) {
                     curvePoints.add(new CadPoint(Double.parseDouble(points[pointCnt]),
                             Double.parseDouble(points[++pointCnt])));
                 }
                 shapeList.add(CadShape.getCadShape(PaintMode.CadCurve, curvePoints, curveColor, lineWidth));
                 shapeList.get(shapeList.size() - 1).setId(currShapeID);
+                System.out.println(shapeList.get(shapeList.size()-1).curvePoints.size());
                 continue;
             }
             if (PaintMode.CadText.toString().equals(lines[i])) {
@@ -174,20 +176,20 @@ class FileImportExport {
                 lineWidth = Double.parseDouble(lines[++i]);
                 shapeList.add(CadShape.getCadShape(PaintMode.CadText, lines[++i], textColor, lineWidth));
                 shapeList.get(shapeList.size() - 1).setId(currShapeID);
-            }
-            if (PaintMode.CadLine.toString().equals(lines[i]) ||
-                    PaintMode.CadRectangle.toString().equals(lines[i])) {
-                currShapeID = Integer.parseInt(lines[++i]);
-                colors = lines[++i].split("\t");
-                lineWidth = Double.parseDouble(lines[++i]);
-                points = lines[++i].split(" ");
-                shapeList.add(CadShape.getCadShape(PaintMode.CadLine,
-                        new CadPoint(Double.parseDouble(points[0]), Double.parseDouble(points[1])),
-                        new CadPoint(Double.parseDouble(points[2]), Double.parseDouble(points[3])),
-                        Color.web(colors[0]), Color.web(colors[1]), lineWidth));
-                shapeList.get(shapeList.size() - 1).setId(currShapeID);
                 continue;
             }
+            PaintMode currShapeType = PaintMode.getPaintModeByName(lines[i]);
+            currShapeID = Integer.parseInt(lines[++i]);
+            colors = lines[++i].split("\t");
+            lineWidth = Double.parseDouble(lines[++i]);
+            points = lines[++i].split(" ");
+            shapeList.add(CadShape.getCadShape(currShapeType,
+                    new CadPoint(Double.parseDouble(points[0]), Double.parseDouble(points[1])),
+                    new CadPoint(Double.parseDouble(points[2]), Double.parseDouble(points[3])),
+                    Color.web(colors[0]), Color.web(colors[1]), lineWidth));
+            shapeList.get(shapeList.size() - 1).setId(currShapeID);
+            continue;
+
             //TODO Eraser类的导入(如需要)
         }
         return true;
