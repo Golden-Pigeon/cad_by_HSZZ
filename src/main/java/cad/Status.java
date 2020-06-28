@@ -3,10 +3,13 @@ package main.java.cad;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Shape;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Status {
+    public static List<Shape> deleteCache = new ArrayList<>();
     public static List<Line> tempLines;
     public static List<CadPoint> points;
     public static Pane mainPane = null;

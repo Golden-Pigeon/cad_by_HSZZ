@@ -1,5 +1,6 @@
 package main.java.cad;
 
+import javafx.animation.Animation;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -428,49 +429,40 @@ public class Controller implements Initializable {
 
     @FXML
     public void onRedoMenuItemAction(ActionEvent actionEvent) {
-/*
+
         List<CadShape> actionList = record.getActionList();
         List<CadShape> deleteList = record.getDeleteList();
         String id;
         CadShape shape;
-        if(deleteList.isEmpty()) {
 
-            if (actionList instanceof LinkedList){
-                shape = ((LinkedList<CadShape>) actionList).getLast();
-            }
-            else {
-                shape = actionList.get(actionList.size() - 1);
-            }
-            id = String.valueOf(shape.id);
-
-            Node n = mainPane.lookup(id);
-            if(n != null){
-                n.setVisible(false);
-                actionList.remove(shape);
-                deleteList.add(shape);
-            }
-            else{
-                System.err.println("redo failed");
-
-            }
-            actionEvent.consume();
+        if (actionList instanceof LinkedList){
+            shape = ((LinkedList<CadShape>) actionList).getLast();
         }
         else {
-            if (deleteList instanceof LinkedList){
-                shape = ((LinkedList<CadShape>) deleteList).getLast();
-            }
-            else {
-                shape = deleteList.get(deleteList.size() - 1);
-            }
-            id = String.valueOf(shape.id);
-            Node n = mainPane.lookup(id);
-            if(n != null){
-                n.setVisible(false);
-                actionList.remove(shape);
-                deleteList.add(shape);
+            shape = deleteList.get(actionList.size() - 1);
+        }
+        Iterator<Node> ite = mainPane.getChildren().iterator();
+        id = String.valueOf(shape.getId());
+//                    System.out.println("line " + id);
+        while (ite.hasNext()) {
+            Node n = ite.next();
+            String item = n.getId();
+//                        System.out.println("item " + item);
+            if (n instanceof Shape && item.equals(id)) {
+//                            System.out.println("removed");
+                Status.deleteCache.add((Shape)n);
+                ite.remove();
             }
         }
-*/
+//        id = String.valueOf(shape.getId());
+//        Node n = mainPane.lookup(id);
+//        if(n != null){
+//            mainPane.getChildren().remove(n);
+        actionList.remove(shape);
+        deleteList.add(shape);
+//        }
+
+
     }
 
     public void onUndoMenuItemAction(ActionEvent actionEvent) {
@@ -690,6 +682,8 @@ public class Controller implements Initializable {
 
     public void onMainPaneMouseDragged(MouseEvent event) {
         if (Status.penDrawable) {
+            Status.deleteCache.clear();
+            record.getDeleteList().clear();
             double x = event.getX();
             double y = event.getY();
             CadPoint last = Status.points.get(Status.points.size() - 1);
