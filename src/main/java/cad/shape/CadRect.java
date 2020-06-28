@@ -1,13 +1,13 @@
 package main.java.cad.shape;
 
 
-import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import main.java.cad.*;
 import main.java.cad.util.CadMath;
+import main.java.cad.util.CadPoint;
 
 
 public class CadRect extends Rectangle {

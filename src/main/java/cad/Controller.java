@@ -1,6 +1,5 @@
 package main.java.cad;
 
-import javafx.animation.Animation;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -8,7 +7,6 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
@@ -22,7 +20,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -34,7 +31,7 @@ import main.java.cad.shape.CadEllipse;
 import main.java.cad.shape.CadLine;
 import main.java.cad.shape.CadRect;
 import main.java.cad.shape.*;
-import main.java.cad.util.CadMath;
+import main.java.cad.util.CadPoint;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -42,7 +39,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.util.*;
 import java.util.List;
 

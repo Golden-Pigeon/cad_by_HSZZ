@@ -1,4 +1,4 @@
-package main.java.cad;
+package main.java.cad.util;
 
 public class CadPoint {
     private final double x;

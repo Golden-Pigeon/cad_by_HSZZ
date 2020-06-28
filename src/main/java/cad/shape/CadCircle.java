@@ -3,9 +3,9 @@ package main.java.cad.shape;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import main.java.cad.*;
+import main.java.cad.util.CadPoint;
 
 public class CadCircle extends Circle {
 

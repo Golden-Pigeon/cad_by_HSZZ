@@ -3,6 +3,7 @@ package main.java.cad;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.paint.Color;
+import main.java.cad.util.CadPoint;
 
 import java.io.*;
 import java.util.ArrayList;

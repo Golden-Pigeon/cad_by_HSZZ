@@ -6,6 +6,7 @@ import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import main.java.cad.*;
+import main.java.cad.util.CadPoint;
 
 public class CadText extends Text {
 

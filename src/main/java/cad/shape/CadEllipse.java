@@ -6,6 +6,7 @@ import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Shape;
 import main.java.cad.*;
 import main.java.cad.util.CadMath;
+import main.java.cad.util.CadPoint;
 
 public class CadEllipse extends Ellipse {
 

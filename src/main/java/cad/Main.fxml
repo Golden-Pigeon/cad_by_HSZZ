@@ -32,7 +32,10 @@
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="S" control="UP" meta="UP" shift="UP" shortcut="DOWN" />
                      </accelerator></MenuItem>
-               <MenuItem mnemonicParsing="false" onAction="#onSaveAsMenuItemAction" text="另存为" />
+               <MenuItem mnemonicParsing="false" onAction="#onSaveAsMenuItemAction" text="另存为">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="S" control="UP" meta="UP" shift="DOWN" shortcut="DOWN" />
+                     </accelerator></MenuItem>
                <SeparatorMenuItem mnemonicParsing="false" />
                <MenuItem mnemonicParsing="false" onAction="#onRefreshMenuItemAction" text="刷新" />
                <MenuItem mnemonicParsing="false" onAction="#onRestartMenuItemAction" text="重启">
