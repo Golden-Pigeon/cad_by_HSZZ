@@ -7,8 +7,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 
 public class CadStatusBar {
-    private HBox statusContainer;
-    private static Label statusText = new Label("");
+    private final HBox statusContainer;
+    private static final Label statusText = new Label("");
 
     public CadStatusBar() {
         statusContainer = new HBox();

@@ -1,6 +1,5 @@
 package main.java.cad;
 
-import javafx.animation.Animation;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -8,20 +7,19 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.*;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.scene.shape.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -31,7 +29,6 @@ import main.java.cad.shape.CadCircle;
 import main.java.cad.shape.CadEllipse;
 import main.java.cad.shape.CadLine;
 import main.java.cad.shape.CadRect;
-import main.java.cad.util.CadMath;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -39,9 +36,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 
 public class Controller implements Initializable {
@@ -60,7 +56,7 @@ public class Controller implements Initializable {
     private double mouseX, mouseY;
 
     @FXML
-    private BorderPane borderPane;
+    BorderPane borderPane;
 
     private Record record;
 
@@ -284,7 +280,7 @@ public class Controller implements Initializable {
         File saveFile = fileChooser.showOpenDialog(mainStage);
         if (saveFile == null)
             return;
-        if (!FileImportExport.importFromFile(record, 0, saveFile)) {
+        if (!FileImportExport.importFromFile(record, saveFile)) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("导入工作空间失败");
             alert.setHeaderText("由于导入操作遇到错误, 未能从文件" + saveFile.getName() + "导入工作空间");
@@ -341,7 +337,7 @@ public class Controller implements Initializable {
         } catch (IOException e) {
             FileImportExport.showIOExceptionAlert();
         }
-        if (!FileImportExport.exportToFile(record, 0, new File(parentDir, child))) {
+        if (!FileImportExport.exportToFile(record, new File(parentDir, child))) {
             System.err.println("save failed");
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("警告");
@@ -349,6 +345,7 @@ public class Controller implements Initializable {
             alert.setContentText("请检查保存路径是否合法");
             alert.showAndWait();
         }
+        Status.saved = true;
     }
 
     @FXML
@@ -377,8 +374,9 @@ public class Controller implements Initializable {
             alert.setTitle("保存成功");
             alert.setHeaderText("成功保存至 " + saving.getName());
             alert.showAndWait();
+            Status.saved = true;
             return;
-        } else if (!FileImportExport.exportToFile(record, 0, saving)) {
+        } else if (!FileImportExport.exportToFile(record, saving)) {
             System.err.println("save failed");
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("警告");
@@ -390,6 +388,7 @@ public class Controller implements Initializable {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("保存成功");
         alert.setHeaderText("成功保存至" + saving.getName());
+        Status.saved = true;
         alert.showAndWait();
     }
 
@@ -435,10 +434,9 @@ public class Controller implements Initializable {
         String id;
         CadShape shape;
 
-        if (actionList instanceof LinkedList){
+        if (actionList instanceof LinkedList) {
             shape = ((LinkedList<CadShape>) actionList).getLast();
-        }
-        else {
+        } else {
             shape = deleteList.get(actionList.size() - 1);
         }
         Iterator<Node> ite = mainPane.getChildren().iterator();
@@ -450,7 +448,7 @@ public class Controller implements Initializable {
 //                        System.out.println("item " + item);
             if (n instanceof Shape && item.equals(id)) {
 //                            System.out.println("removed");
-                Status.deleteCache.add((Shape)n);
+                Status.deleteCache.add((Shape) n);
                 ite.remove();
             }
         }
