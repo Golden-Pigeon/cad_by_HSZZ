@@ -6,7 +6,6 @@ public class CommonPath {
 
     public static final String gitHubLink = "https://github.com/Golden-Pigeon/cad_by_HSZZ";
 
-
     /**
      * 默认存档路径
      */
