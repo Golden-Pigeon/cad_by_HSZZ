@@ -14,6 +14,7 @@ public class CadText extends Text {
         this(startPoint.getX(), startPoint.getY(), cadShape.textContent, cadShape, parent, record);
         this.setFont(Font.font(Status.fontType, cadShape.lineWidth));
         this.setStroke(cadShape.lineColor);
+        this.setFill(cadShape.fillColor);
     }
 
     public CadText(double startX, double startY, String context, CadShape shape, Pane parent, Record record){

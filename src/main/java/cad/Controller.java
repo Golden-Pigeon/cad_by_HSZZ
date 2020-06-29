@@ -10,26 +10,22 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.*;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.scene.shape.*;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import main.java.cad.CommonDefinitions.CommonPath;
 import main.java.cad.MainCadStageParts.CadStatusBar;
-import main.java.cad.shape.CadCircle;
-import main.java.cad.shape.CadEllipse;
-import main.java.cad.shape.CadLine;
-import main.java.cad.shape.CadRect;
 import main.java.cad.shape.*;
 import main.java.cad.util.CadPoint;
 
@@ -39,8 +35,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 
 public class Controller implements Initializable {
@@ -269,21 +265,21 @@ public class Controller implements Initializable {
                 + String.format("%.1f, %.1fpx ", mouseEvent.getX(), mouseEvent.getY()));
         mouseX = mouseEvent.getX();
         mouseY = mouseEvent.getY();
-        if(Status.startPoint != null){
+        if (Status.startPoint != null) {
             double startX = Status.startPoint.getX();
             double startY = Status.startPoint.getY();
             double endX = mouseEvent.getX();
             double endY = mouseEvent.getY();
-            switch (Status.paintMode){
+            switch (Status.paintMode) {
                 case CadLine:
-                    if(Status.lastShape != null)
+                    if (Status.lastShape != null)
                         mainPane.getChildren().remove(Status.lastShape);
                     Status.lastShape = new Line(startX, startY, endX, endY);
                     mainPane.getChildren().add(Status.lastShape);
                     Status.lastShape.setStroke(Status.strokeColor);
                     break;
                 case CadCircle:
-                    if(Status.lastShape != null)
+                    if (Status.lastShape != null)
                         mainPane.getChildren().remove(Status.lastShape);
                     Status.lastShape = new Circle(startX, startY, Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2)));
                     mainPane.getChildren().add(Status.lastShape);
@@ -292,7 +288,7 @@ public class Controller implements Initializable {
                     break;
                 case CadRectangle:
                 case CadRectangle_RoundCorner:
-                    if(Status.lastShape != null)
+                    if (Status.lastShape != null)
                         mainPane.getChildren().remove(Status.lastShape);
                     Status.lastShape = new Rectangle(Math.min(startX, endX), Math.min(startY, endY),
                             Math.abs(endX - startX), Math.abs(endY - startY));
@@ -301,7 +297,7 @@ public class Controller implements Initializable {
                     Status.lastShape.setFill(Color.TRANSPARENT);
                     break;
                 case CadOval:
-                    if(Status.lastShape != null)
+                    if (Status.lastShape != null)
                         mainPane.getChildren().remove(Status.lastShape);
                     Status.lastShape = new Ellipse((startX + endX) / 2, (startY + endY) / 2,
                             Math.abs((endX - startX) / 2), Math.abs((endY - startY) / 2));
@@ -329,7 +325,10 @@ public class Controller implements Initializable {
         record = new Record();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("请选择要导入的工作环境...");
-        fileChooser.setInitialDirectory(new File(CommonPath.DEFAULT_SAVE_DIR));
+        if(new File(CommonPath.DEFAULT_SAVE_DIR).exists())
+            fileChooser.setInitialDirectory(new File(CommonPath.DEFAULT_SAVE_DIR));
+        else
+            fileChooser.setInitialDirectory(new File("."));
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("导出的工作环境存档 - Workspace Save File", "*.hszz")
         );
@@ -375,7 +374,7 @@ public class Controller implements Initializable {
                 Circle newCircle = new CadCircle(currShape.startPoint, currShape.endPoint, currShape, mainPane, record);
                 mainPane.getChildren().add(newCircle);
             }
-            if(currShape.type.equals(PaintMode.CadText)) {
+            if (currShape.type.equals(PaintMode.CadText)) {
                 Text newText = new CadText(currShape.startPoint, currShape, mainPane, record);
                 mainPane.getChildren().add(newText);
             }
@@ -415,7 +414,7 @@ public class Controller implements Initializable {
 
     public void onSaveMenuItemAction(ActionEvent actionEvent) {
         File saveDir = new File(CommonPath.DEFAULT_SAVE_DIR);
-        if(!saveDir.exists()) {
+        if (!saveDir.exists()) {
             saveDir.mkdir();
         }
         child = new Date().toString().replace(' ', '_').replace(':', '_') + ".hszz";
@@ -519,7 +518,7 @@ public class Controller implements Initializable {
 
     @FXML
     public void onExitMenuItemAction(ActionEvent actionEvent) {
-        if(!Status.saved){
+        if (!Status.saved) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("退出程序");
             alert.setHeaderText("确定要关闭吗");
@@ -541,7 +540,7 @@ public class Controller implements Initializable {
         List<CadShape> deleteList = record.getDeleteList();
         String id;
         CadShape shape;
-        if(!actionList.isEmpty()) {
+        if (!actionList.isEmpty()) {
             if (actionList instanceof LinkedList) {
                 shape = ((LinkedList<CadShape>) actionList).getLast();
             } else {
@@ -576,16 +575,16 @@ public class Controller implements Initializable {
         List<CadShape> deleteList = record.getDeleteList();
         String id;
         CadShape shape;
-        if(!deleteList.isEmpty()){
+        if (!deleteList.isEmpty()) {
             if (deleteList instanceof LinkedList) {
                 shape = ((LinkedList<CadShape>) deleteList).getLast();
             } else {
                 shape = deleteList.get(deleteList.size() - 1);
             }
             ListIterator<Shape> ite = Status.deleteCache.listIterator();
-            while (ite.hasNext()){
+            while (ite.hasNext()) {
                 Shape s = ite.next();
-                if(s.getId().equals(String.valueOf(shape.getId()))){
+                if (s.getId().equals(String.valueOf(shape.getId()))) {
                     mainPane.getChildren().add(s);
                     ite.remove();
                 }
@@ -596,12 +595,12 @@ public class Controller implements Initializable {
     }
 
     public void onDeleteMenuItemAction(ActionEvent actionEvent) {
-        if(Status.selectAll) {
+        if (Status.selectAll) {
             mainPane.getChildren().clear();
             Status.selected = null;
             Status.selectAll = false;
         }
-        if(Status.selected != null){
+        if (Status.selected != null) {
             Iterator<Node> ite = mainPane.getChildren().iterator();
             String id = String.valueOf(Status.selected.getId());
 //                    System.out.println("line " + id);
@@ -625,6 +624,7 @@ public class Controller implements Initializable {
             if (node instanceof Shape) ((Shape) node).setStroke(Color.RED);
         });
     }
+
     //TODO: list record
     public void onListRecordMenuItemAction(ActionEvent actionEvent) {
 
@@ -735,7 +735,7 @@ public class Controller implements Initializable {
             Status.selectAll = false;
             mainPane.getChildren().forEach(t -> {
                 if (t instanceof Shape)
-                    ((Shape) t).setStroke(Status.strokeColor);//TODO: recover the origin color
+                    ((Shape) t).setStroke(Status.strokeColor);
             });
         }
         double x = mouseEvent.getX();
@@ -748,13 +748,14 @@ public class Controller implements Initializable {
                 dialog.setHeaderText("插入文字");
                 dialog.setContentText("键入想插入的文字");
                 Optional<String> words = dialog.showAndWait();
-                if(!words.isPresent())
+                if (!words.isPresent())
                     return;
                 CadShape textShape = CadShape.getCadShape(PaintMode.CadText, new CadPoint(x, y), words.get(), Status.strokeColor, Status.lineWidth + 13);
                 record.getActionList().add(textShape);
                 assert textShape != null;
                 Text text = new CadText(x, y, words.get(), textShape, mainPane, record);
                 text.setStroke(Status.strokeColor);
+                text.setFill(Status.fillColor);
                 mainPane.getChildren().add(text);
 
                 break;
@@ -765,7 +766,7 @@ public class Controller implements Initializable {
                 if (Status.startPoint == null) {
                     Status.startPoint = new CadPoint(x, y);
                 } else {
-                    if(Status.lastShape != null){
+                    if (Status.lastShape != null) {
                         mainPane.getChildren().remove(Status.lastShape);
                         Status.lastShape = null;
                     }
@@ -786,7 +787,7 @@ public class Controller implements Initializable {
                 if (Status.startPoint == null) {
                     Status.startPoint = new CadPoint(x, y);
                 } else {
-                    if(Status.lastShape != null){
+                    if (Status.lastShape != null) {
                         mainPane.getChildren().remove(Status.lastShape);
                         Status.lastShape = null;
                     }
@@ -807,7 +808,7 @@ public class Controller implements Initializable {
                 if (Status.startPoint == null) {
                     Status.startPoint = new CadPoint(x, y);
                 } else {
-                    if(Status.lastShape != null){
+                    if (Status.lastShape != null) {
                         mainPane.getChildren().remove(Status.lastShape);
                         Status.lastShape = null;
                     }
@@ -827,7 +828,7 @@ public class Controller implements Initializable {
                 if (Status.startPoint == null) {
                     Status.startPoint = new CadPoint(x, y);
                 } else {
-                    if(Status.lastShape != null){
+                    if (Status.lastShape != null) {
                         mainPane.getChildren().remove(Status.lastShape);
                         Status.lastShape = null;
                     }
@@ -849,7 +850,7 @@ public class Controller implements Initializable {
                 if (Status.startPoint == null) {
                     Status.startPoint = new CadPoint(x, y);
                 } else {
-                    if(Status.lastShape != null){
+                    if (Status.lastShape != null) {
                         mainPane.getChildren().remove(Status.lastShape);
                         Status.lastShape = null;
                     }
