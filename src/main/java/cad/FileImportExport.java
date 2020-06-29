@@ -2,6 +2,7 @@ package main.java.cad;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import main.java.cad.util.CadPoint;
 
@@ -136,6 +137,8 @@ class FileImportExport {
         String[] fileHeader = segmentedLists[0].split("\n");
         if (!fileHeader[0].equals("JavaFX_CAD_HSZZ")) {
             Alert failedToDecryptAlert = new Alert(Alert.AlertType.ERROR);
+            failedToDecryptAlert.getDialogPane().setPrefWidth(520);
+            failedToDecryptAlert.getDialogPane().setMinWidth(Region.USE_PREF_SIZE);
             failedToDecryptAlert.setTitle("导入工作环境存档时遇到了一些问题...");
             failedToDecryptAlert.setHeaderText("导入操作存在一定问题, 因此该存档未能被导入");
             failedToDecryptAlert.setContentText("这可能是由以下原因导致的:\n  - 错误的密钥(很可能, 请好好检查一下)\n" +

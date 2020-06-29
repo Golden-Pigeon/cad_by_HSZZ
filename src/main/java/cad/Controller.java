@@ -38,6 +38,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.*;
 
+import static main.java.cad.FileImportExport.showIOExceptionAlert;
 
 public class Controller implements Initializable {
     public ComboBox<String> typeComboBox;
@@ -242,6 +243,7 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         mainPane.setVisible(false);
         borderPane.setBackground(new Background(new BackgroundFill(Color.web("#aaaaaa"), null, null)));
         painterToolBar.setVisible(false);
@@ -426,7 +428,7 @@ public class Controller implements Initializable {
                     new File(parentDir, child.replace(".hszz", ".png")));
             Status.saved = true;
         } catch (IOException e) {
-            FileImportExport.showIOExceptionAlert();
+            showIOExceptionAlert();
         }
         if (!FileImportExport.exportToFile(record, new File(parentDir, child))) {
             System.err.println("save failed");
@@ -460,7 +462,7 @@ public class Controller implements Initializable {
             try {
                 ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", saving);
             } catch (IOException e) {
-                FileImportExport.showIOExceptionAlert();
+                showIOExceptionAlert();
             }
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("保存成功");
