@@ -57,3 +57,5 @@ Platform: GitHub
 ## The Last Thing to Say
 If you find **any bug, or something could be better**, just **open an issue to discuss** it with us.    
 Thanks for your appreciation 🍻
+## The Last Last Thing to Say
+Thanks to [HorizonChaser](https://github.com/HorizonChaser) who made great efforts to this project.
