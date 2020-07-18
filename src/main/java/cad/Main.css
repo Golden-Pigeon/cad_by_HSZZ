@@ -1,0 +1,5 @@
+.tool-buttons{
+    -fx-border-style: solid;
+    -fx-border-color: black;
+    -fx-border-width: 3px;
+}
