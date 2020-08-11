@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="cad:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/cad_jar</output-path>
+    <root id="archive" name="cad.jar">
+      <element id="module-output" name="cad" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/jfoenix-8.0.10.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
