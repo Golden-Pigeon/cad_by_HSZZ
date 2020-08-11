@@ -959,4 +959,9 @@ public class Controller implements Initializable {
     }
 
 
+    public void onHistoryMenuItemAction(ActionEvent actionEvent) {
+        
+
+
+    }
 }

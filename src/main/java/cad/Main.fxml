@@ -69,6 +69,11 @@
                <MenuItem disable="true" mnemonicParsing="false" onAction="#onListRecordMenuItemAction" text="List Record" />
          </items>
        </Menu>
+            <Menu mnemonicParsing="false" text="视图">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#onHistoryMenuItemAction" text="历史操作" />
+              </items>
+            </Menu>
          <Menu mnemonicParsing="false" text="工具">
            <items>
                <CheckMenuItem fx:id="painterToolBarMenuItem" mnemonicParsing="false" onAction="#onPainterToolMenuItemAction" text="绘图工具">
